@@ -32,7 +32,7 @@ export const ProductList = ({
     <div className='container-items'>
       {data.map(product => (
         <div className="item" key={product.id}>
-            {/* <figure>
+            <figure>
                 <img
                     src={product.urlImage}
                     alt={product.nameProduct}
@@ -42,12 +42,6 @@ export const ProductList = ({
                 <h2>{product.nameProduct}</h2>
                 <p className="price">${product.price}</p>
                 <button onClick={() => onAddProduct(product)}>Añadir al carrito</button>
-            </div> */}
-            <div className="product">
-                <img src={product.urlImage} alt={product.nameProduct} />
-                <h3>{product.nameProduct}</h3>
-                <span className="price">${product.price}</span>
-                <button>Agregar al carrito</button>
             </div>
         </div>
       ))}
