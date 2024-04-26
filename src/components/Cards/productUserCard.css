@@ -1,0 +1,27 @@
+.userItem {
+    display: flex;
+    margin: 1rem;
+
+    img {
+        max-width: 7rem;
+        height: 6rem;
+    }
+
+    .user-info-product {
+        display: flex;
+        padding-left: 1rem;
+        align-items: center;
+
+        h2 {
+            margin: 0 1rem;
+        }
+
+        .price {
+            margin: 0 1rem;
+        }
+
+        .timestamp {
+            margin: 0 1rem;
+        }
+    }
+}

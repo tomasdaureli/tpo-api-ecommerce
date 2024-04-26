@@ -1,34 +1,47 @@
 .container {
-    display: grid;
-    grid-template-areas: 
-      "header header"
-      "sidebar main"
-      "footer footer";
-    grid-template-rows: auto 1fr auto;
-    grid-template-columns: 300px 1fr;
-    height: 100vh;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 1px 1px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "userPurchases userSales";
+  min-height: 40rem;
+
+}
+
+.userData {
+  display: flex;
+  padding: 1rem;
+  border: 1px black solid;
+
+  .userImage {
+    height: auto;
+    max-width: 15rem;
   }
-  .header {
-    grid-area: header;
+
+  .Udata {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1em;
-    border-bottom: 1px solid #ccc;
+    flex-direction: column;
+    text-align: start;
+    margin: 0;
+    padding: 1rem ;
+
   }
-  .sidebar {
-    grid-area: sidebar;
-    border-right: 1px solid #ccc;
-    padding: 1em;
-  }
-  .main-content {
-    grid-area: main;
-    padding: 1em;
-  }
-  .footer {
-    grid-area: footer;
-    border-top: 1px solid #ccc;
-  }
-  .user-session span {
-    margin-right: 0.5em;
-  }
+}
+
+.userPurchases {
+  grid-area: userPurchases;
+  border: 1px black solid;
+}
+
+.userSales {
+  grid-area: userSales;
+  border: 1px black solid;
+}
+
+.user-container-items {
+  display: flex;
+  flex-direction: column;
+}
