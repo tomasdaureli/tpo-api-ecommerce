@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { ProductList } from './ProductList'
-import { Header } from './Header'
+import { Header } from '../Header'
 
 export function Catalog() {
 
