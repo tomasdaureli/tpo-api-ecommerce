@@ -5,11 +5,15 @@ Para poder levantar el proyecto local seguir estos pasos
 ### Clonar repositorio
 
 ```bash
-  git clone https://github.com/tomasdaureli/tpo-api-ecommerce.git
+git clone https://github.com/tomasdaureli/tpo-api-ecommerce.git
 ```
 
-### Instalar dependencias y ejecutar aplicacion
+### Instalar dependencias
 ```bash
-  npm install
-  npm run dev
+npm install
+```
+
+### Ejecutar aplicación
+```bash
+npm run dev
 ```
