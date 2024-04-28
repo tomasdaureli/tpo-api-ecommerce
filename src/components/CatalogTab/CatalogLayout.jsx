@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Outlet } from 'react-router-dom';
 
-export function CatalogLayout({ children }) {
+export function CatalogLayout() {
   return (
     <Outlet />
   )
