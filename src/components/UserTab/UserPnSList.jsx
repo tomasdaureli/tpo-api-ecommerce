@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import './User.css'
-import { ProductUserCard } from '../Cards/productUserCard';
+import { ProductUserCard } from '../Cards/ProductUserCard';
 
 export function UserPnSList({ user }) {
 
@@ -24,9 +24,8 @@ export function UserPnSList({ user }) {
     };
     return (
         <>
-            {!user ? (<div>Cargando datos del usuario...</div>) : (<>
-                <div class="container">
-                    <div class="userPurchases">
+            {!user ? (<div>Cargando datos del usuario...</div>) : (<div className="container">
+                    <div className="userPurchases">
                         <p>Total de compras: {user?.purchases?.length}</p>
                         <button onClick={previousBulk} disabled={currentIndex === 0}>
                             Anterior
@@ -41,12 +40,11 @@ export function UserPnSList({ user }) {
                         </div>
 
                     </div>
-                    <div class="userSales">
+                    <div className="userSales">
                         <p>Total de ventas: {user?.sales?.length}</p>
 
                     </div>
-                </div >
-            </>)
+                </div >)
             }
 
         </>
