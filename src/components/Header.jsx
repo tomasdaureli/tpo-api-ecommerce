@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import { Link } from 'react-router-dom'
+
 export const Header = ({
     allProducts,
     setAllProducts,
@@ -27,6 +29,12 @@ export const Header = ({
   return (
     <header>
 			<h1>Tienda Grupo 4</h1>
+
+            <ul className='NavBar'>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/catalogo">Catalogo</Link></li>
+                <li><Link to="/user">Usuario</Link></li>
+            </ul>
 
 			<div className="container-icon">
 				<div className="container-cart-icon" onClick={() => setActive(!active)}>

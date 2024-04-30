@@ -1,5 +1,6 @@
 import React from 'react'
 import { data } from '../../Database/data'
+import { useNavigate } from 'react-router-dom'
 
 export const ProductList = ({ 
     allProducts,
@@ -9,6 +10,8 @@ export const ProductList = ({
     total,
     setTotal
 }) => {
+
+    const navigate = useNavigate();
 
     const onAddProduct = product => {
         const existingProduct = allProducts.find(item => item.id === product.id);
@@ -28,11 +31,15 @@ export const ProductList = ({
         setTotal(total + product.price * product.quantity);
     };
 
+    const handleProductClick = (productId) => {
+        navigate(`/catalogo/${productId}`);
+    }
+
   return (
     <div className='container-items'>
       {data.map(product => (
         <div className="item" key={product.id}>
-            <figure>
+            <figure onClick={() => handleProductClick(product.id)}>
                 <img
                     src={product.urlImage}
                     alt={product.nameProduct}

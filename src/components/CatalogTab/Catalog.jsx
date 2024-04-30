@@ -1,30 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { ProductList } from './ProductList'
-import { Header } from '../Header'
 
-export function Catalog() {
-
-    const [allProducts, setAllProducts] = useState([])
-    const [total, setTotal] = useState(0)
-    const [countProducts, setCountProducts] = useState(0)
+export function Catalog({
+  allProducts,
+  setAllProducts,
+  total,
+  countProducts,
+  setCountProducts,
+  setTotal
+}) {
 
   return (
-    <>
-      <Header 
+    <ProductList 
         allProducts={allProducts}
         setAllProducts={setAllProducts}
         total={total}
         setTotal={setTotal}
         countProducts={countProducts}
         setCountProducts={setCountProducts} />
-      <ProductList 
-        allProducts={allProducts}
-        setAllProducts={setAllProducts}
-        total={total}
-        setTotal={setTotal}
-        countProducts={countProducts}
-        setCountProducts={setCountProducts} />
-    </>
   )
 }
