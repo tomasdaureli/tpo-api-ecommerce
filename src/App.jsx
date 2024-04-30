@@ -9,12 +9,15 @@ import { CatalogLayout } from './components/CatalogTab/CatalogLayout'
 import { Product } from './components/CatalogTab/Product'
 import { User } from './components/UserTab/User'
 import { Header } from './components/Header'
+import { Checkout } from './components/BuyTab/Checkout'
+import Buy from './components/BuyTab/Buy'
 
 function App() {
 
   const [allProducts, setAllProducts] = useState([])
   const [total, setTotal] = useState(0)
   const [countProducts, setCountProducts] = useState(0)
+  const [user, setUser] = useState({})
 
   return (
     <>
@@ -46,7 +49,20 @@ function App() {
               setCountProducts={setCountProducts} />
             } />
           </Route>
-          <Route path='/user' element={<User />} />
+          <Route path='/user' element={<User 
+            user={user}
+            setUser={setUser}/>
+          } />
+          <Route path='/buy/checkout' element={<Checkout 
+            user={user}
+            setUser={setUser}
+            allProducts={allProducts}
+            setAllProducts={setAllProducts}
+            total={total}
+            setTotal={setTotal}
+            setCountProducts={setCountProducts}/>
+          } />
+          <Route path='/buy/success' element={<Buy />} />
         </Routes>
       </div>
     </>
