@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export const Header = ({
     allProducts,
@@ -13,6 +13,8 @@ export const Header = ({
 
     const [active, setActive] = useState(false)
 
+    const navigate = useNavigate();
+
     const onDeleteProduct = (product) => {
         const newProducts = allProducts.filter(item => item.id !== product.id)
         setAllProducts(newProducts)
@@ -20,10 +22,8 @@ export const Header = ({
         setTotal(total - product.price * product.quantity)
     }
 
-    const onCleanCart = () => {
-		setAllProducts([]);
-		setTotal(0);
-		setCountProducts(0);
+    const onFinishBuy = () => {
+        navigate('/buy/checkout');
 	};
 
   return (
@@ -99,8 +99,8 @@ export const Header = ({
                                     <span className="total-pagar">${total}</span>
                                 </div>
 
-                                <button className='btn-clear-all' onClick={onCleanCart}>
-                                    Vaciar carrito
+                                <button className='btn-finish-buy' onClick={onFinishBuy}>
+                                    Finalizar compra
                                 </button>
                             </>
                         ) : (

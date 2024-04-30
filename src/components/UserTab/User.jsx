@@ -3,9 +3,11 @@ import { userData } from "../../Database/data"
 import './User.css'
 import { UserPnSList } from './UserPnSList';
 
-export function User() {
+export function User({
+    user,
+    setUser
+}) {
 
-  const [user, setUser] = useState({})
   const [currentIndex, setCurrentIndex] = useState(0);
   const bulkSize = 4;
 
