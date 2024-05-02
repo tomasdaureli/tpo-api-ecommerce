@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import './User.css'
-import { ProductUserCard } from '../Cards/ProductUserCard';
+import { ProductUserCard } from '../Cards/productUserCard';
 
 export function UserPnSList({ user }) {
 
     const [currentIndex, setCurrentIndex] = useState(0);
-    const bulkSize = 4;
+    const bulkSize = 6;
 
     const purchasesBulks = user?.purchases
         ? Array.from({ length: Math.ceil(user.purchases.length / bulkSize) }, (_, i) =>
@@ -25,26 +25,29 @@ export function UserPnSList({ user }) {
     return (
         <>
             {!user ? (<div>Cargando datos del usuario...</div>) : (<div className="container">
-                    <div className="userPurchases">
-                        <p>Total de compras: {user?.purchases?.length}</p>
-                        <button onClick={previousBulk} disabled={currentIndex === 0}>
+                <div className="userPurchases">
+                    <p>Total de compras: {user?.purchases?.length}</p>
+                    <div className='pagination-container'>
+                        <button className='page-button' onClick={previousBulk} disabled={currentIndex === 0}>
                             Anterior
                         </button>
-                        <button onClick={nextBulk} disabled={currentIndex === purchasesBulks.length - 1}>
+                        <div className='page-info'>Página: {currentIndex + 1} de {purchasesBulks.length}</div>
+                        <button className='page-button' onClick={nextBulk} disabled={currentIndex === purchasesBulks.length - 1}>
                             Siguiente
                         </button>
-                        <div className='user-container-items'>
-                            {purchasesBulks[currentIndex]?.map(product => (
-                                <ProductUserCard product={product} />
-                            ))}
-                        </div>
-
                     </div>
-                    <div className="userSales">
-                        <p>Total de ventas: {user?.sales?.length}</p>
-
+                    <div className='user-container-items'>
+                        {purchasesBulks[currentIndex]?.map(product => (
+                            <ProductUserCard product={product} key={product.id} />
+                        ))}
                     </div>
-                </div >)
+
+                </div>
+                <div className="userSales">
+                    <p>Total de ventas: {user?.sales?.length}</p>
+
+                </div>
+            </div >)
             }
 
         </>

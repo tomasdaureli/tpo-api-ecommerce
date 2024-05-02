@@ -1,0 +1,82 @@
+
+.login-container {
+    width: 300px;
+    margin: 100px auto;
+    background-color: #542583;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #FDB827;
+    color: #FDB827;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-container img {
+    width: 100px;
+    height: 100px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #542583;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px;
+    background-color: #fff;
+    color: #542583;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    
+}
+
+button:hover {
+    background-color: #FDB827;
+}
+
+p {
+    margin-top: 15px;
+    text-align: center;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.contenedor-imagen {
+    width: 75px; /* Ancho deseado */
+    height: 75px; /* Alto deseado */
+    overflow: hidden; /* Oculta el contenido que exceda las dimensiones del contenedor */
+    margin:auto;
+    display:block;
+    
+}
+
+.contenedor-imagen img {
+    width: 100%; /* Para asegurarse de que la imagen ocupe todo el contenedor */
+    height: auto; /* Para mantener la proporción de la imagen */
+    object-fit: cover; /* Escala la imagen para que llene el contenedor manteniendo las proporciones */
+    
+    
+}

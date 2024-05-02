@@ -1,4 +1,4 @@
-import img from "./userImg.jpg";
+import img from "../assets/imgs/userImg.jpg";
 
 export const data = [
   {

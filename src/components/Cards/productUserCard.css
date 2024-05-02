@@ -1,27 +1,32 @@
 .userItem {
     display: flex;
+    flex-direction: column;
     margin: 1rem;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 17rem;
+    height: 12rem;
+}
 
-    img {
-        max-width: 7rem;
-        height: 6rem;
-    }
+.user-info-product {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    align-items: center;
+}
 
-    .user-info-product {
-        display: flex;
-        padding-left: 1rem;
-        align-items: center;
+.productSpans span {
+    display: block;
+    margin-bottom: 0.5rem;
+}
 
-        h2 {
-            margin: 0 1rem;
-        }
+.price {
+    font-weight: bold;
+    margin-top: 1rem;
+}
 
-        .price {
-            margin: 0 1rem;
-        }
-
-        .timestamp {
-            margin: 0 1rem;
-        }
-    }
+.timestamp {
+    font-size: small;
+    color: #666;
 }
