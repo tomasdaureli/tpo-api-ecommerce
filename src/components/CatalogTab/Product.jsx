@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { data } from '../../Database/data'
+import { getProductById } from '../../api/productsApi';
 
 export function Product({
     allProducts,
@@ -11,12 +11,16 @@ export function Product({
     setTotal
 }) {
 
+    const [product, setProduct] = useState([]);
+
     const { productId } = useParams();
     const navigate = useNavigate();
 
     const formattedProductId = parseInt(productId, 10);
 
-    const product = data.find(item => item.id === formattedProductId);
+    useEffect(() => {
+        getProductById(formattedProductId).then((data) => setProduct(data))
+    }, [])
 
     const onAddProduct = product => {
         const existingProduct = allProducts.find(item => item.id === product.id);
