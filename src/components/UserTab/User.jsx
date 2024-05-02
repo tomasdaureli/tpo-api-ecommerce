@@ -24,9 +24,8 @@ export function User({
   function LogOut() {
     localStorage.removeItem("USER")
 
-
     navigate("/", { replace: true });
-
+    window.location.reload();
   }
   return (
     <>

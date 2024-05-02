@@ -17,6 +17,7 @@ export function Login() {
             const userJson = localStorage.getItem("USER");
             if (userJson) {
                 navigate("/home", { replace: true });
+                window.location.reload();
             }
         };
         loadUser();
