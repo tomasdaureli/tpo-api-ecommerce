@@ -1,63 +1,48 @@
-import React, { useState, useEffect } from 'react'
-import { userData } from "../../Database/data"
-import './User.css'
+import React, { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+
+import './User.css';
 import { UserPnSList } from './UserPnSList';
+import defaultImg from "../../assets/imgs/User.png";
 
 export function User({
-    user,
-    setUser
+  user,
+  setUser
 }) {
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const bulkSize = 4;
-
+  let navigate = useNavigate();
   useEffect(() => {
     const loadUser = () => {
-      setUser(userData)
-      const userJson = localStorage.getItem('user');
+      const userJson = JSON.parse(localStorage.getItem('USER'));
       if (userJson) {
-        setUser(JSON.parse(userJson));
+        setUser(userJson);
       }
     };
 
     loadUser();
   }, []);
 
-  const purchasesBulks = user?.purchases
-    ? Array.from({ length: Math.ceil(user.purchases.length / bulkSize) }, (_, i) =>
-      user.purchases.slice(i * bulkSize, i * bulkSize + bulkSize)
-    )
-    : [];
+  function LogOut() {
+    localStorage.removeItem("USER")
 
-  const previousBulk = () => {
-    setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
-  };
-
-  const nextBulk = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex < purchasesBulks.length - 1 ? prevIndex + 1 : prevIndex
-    );
-  };
+    navigate("/", { replace: true });
+    window.location.reload();
+  }
   return (
     <>
-      {!user ? (<div>Cargando datos del usuario...</div>) : (<>
-
-        <div class="userData">
-          <img className='userImage' src={user?.img} alt="" />
+      {!user ? (<div>Cargando datos del usuario...</div>) : (
+        <div className="userData">
+          <img className='userImage' src={user?.img ? user?.img : defaultImg} alt="User" />
           <div className='Udata'>
             <h1>{user.name}</h1>
-            <p>
-              Email: {user.email}<br />
-              Última conexión: {user.lastLogin}
-            </p>
+            <p>Email: {user.email}<br />Última conexión: {user.lastLogin}</p>
           </div>
+          <button className="logoutButton" onClick={() => { LogOut() }}>
+            Logout
+          </button>
         </div>
-        <UserPnSList user={user} />
-      </>)
-      }
+      )}
 
+      <UserPnSList user={user} />
     </>
-
-
   );
 }

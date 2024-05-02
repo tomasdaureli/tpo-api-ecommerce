@@ -29,9 +29,8 @@ export const Header = ({
   return (
     <header>
 			<h1>Tienda Grupo 4</h1>
-
             <ul className='NavBar'>
-                <li><Link to="/">Home</Link></li>
+                <li><Link to="/home">Home</Link></li>
                 <li><Link to="/catalogo">Catalogo</Link></li>
                 <li><Link to="/user">Usuario</Link></li>
             </ul>

@@ -13,8 +13,10 @@
 
 .userData {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 1rem;
-  border: 1px black solid;
+  border: 1px solid black;
 
   .userImage {
     height: auto;
@@ -26,7 +28,12 @@
     flex-direction: column;
     text-align: start;
     margin: 0;
-    padding: 1rem ;
+    padding: 1rem;
+    flex-grow: 1;
+
+    p {
+      text-align: start;
+    }
 
   }
 }
@@ -43,5 +50,64 @@
 
 .user-container-items {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.page-button {
+  padding: 8px 16px;
+  margin: 0 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.page-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.page-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.page-info {
+  font-size: 16px;
+  color: #333;
+}
+
+.user-container-items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ------------ */
+
+.logoutButton {
+  padding: 8px 16px;
+  background-color: #f44336;
+  /* Rojo para el botón de logout */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logoutButton:hover {
+  background-color: #c33c29;
+  /* Un tono más oscuro al hacer hover */
 }
