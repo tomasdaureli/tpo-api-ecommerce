@@ -3,42 +3,64 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export function Checkout({
-    user,
-    setUser,
-    allProducts,
-    setAllProducts,
-    total,
-    setTotal,
-    count,
-    setCountProducts
+  user,
+  setUser,
+  allProducts,
+  setAllProducts,
+  total,
+  setTotal,
+  count,
+  setCountProducts
 }) {
 
   const navigate = useNavigate();
 
+  const handlePurchase = (purchase) => {
+    const usersJson = localStorage.getItem('USER_REGISTERED');
+    const userLogged = JSON.parse(localStorage.getItem('USER'));
+    let users = usersJson ? JSON.parse(usersJson) : [];
+
+    const userIndex = users.findIndex(user => user.email === userLogged.email);
+    if (userIndex === -1) {
+      console.error("Usuario no encontrado");
+      return;
+    }
+    userLogged.purchases.push({
+      id: userLogged.purchases.length,
+      items: purchase
+    });
+    users[userIndex].purchases.push({ id: users[userIndex].purchases.length, items: purchase });
+    localStorage.setItem('USER', JSON.stringify(userLogged));
+    localStorage.setItem('USER_REGISTERED', JSON.stringify(users));
+  };
+
+
   const onConfirmBuy = () => {
+
+    handlePurchase(allProducts)
     setAllProducts([]);
-		setTotal(0);
-		setCountProducts(0);
+    setTotal(0);
+    setCountProducts(0);
     navigate("/buy/success")
   }
 
   return (
     <>
       <div className='button-back' onClick={() => navigate("/catalogo")}>
-        
+
         <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="icon-cart"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="icon-cart"
         >
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          />
         </svg>
         <label> Volver al catalogo</label>
       </div>

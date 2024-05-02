@@ -1,9 +1,11 @@
 import { Routes, Route } from 'react-router-dom'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import './App.css'
 import { Home } from './components/HomeTab/Home'
+import { Login } from './components/Login&Register/Login'
+import { Register } from './components/Login&Register/Register'
 import { Catalog } from './components/CatalogTab/Catalog'
 import { CatalogLayout } from './components/CatalogTab/CatalogLayout'
 import { Product } from './components/CatalogTab/Product'
@@ -19,26 +21,29 @@ function App() {
   const [countProducts, setCountProducts] = useState(0)
   const [user, setUser] = useState({})
 
+
   return (
     <>
-      <Header 
+      {!localStorage.getItem("USER") ? "" : <Header
         allProducts={allProducts}
         setAllProducts={setAllProducts}
         total={total}
         setTotal={setTotal}
         countProducts={countProducts}
-        setCountProducts={setCountProducts} />
+        setCountProducts={setCountProducts} />}
       <div>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/home' element={<Home />} />
           <Route path='/catalogo' element={<CatalogLayout />}>
-            <Route index element={<Catalog 
+            <Route index element={<Catalog
               allProducts={allProducts}
               setAllProducts={setAllProducts}
               total={total}
               setTotal={setTotal}
               countProducts={countProducts}
-              setCountProducts={setCountProducts}/>
+              setCountProducts={setCountProducts} />
             } />
             <Route path=':productId' element={<Product
               allProducts={allProducts}
@@ -49,18 +54,18 @@ function App() {
               setCountProducts={setCountProducts} />
             } />
           </Route>
-          <Route path='/user' element={<User 
+          <Route path='/user' element={<User
             user={user}
-            setUser={setUser}/>
+            setUser={setUser} />
           } />
-          <Route path='/buy/checkout' element={<Checkout 
+          <Route path='/buy/checkout' element={<Checkout
             user={user}
             setUser={setUser}
             allProducts={allProducts}
             setAllProducts={setAllProducts}
             total={total}
             setTotal={setTotal}
-            setCountProducts={setCountProducts}/>
+            setCountProducts={setCountProducts} />
           } />
           <Route path='/buy/success' element={<Buy />} />
         </Routes>
