@@ -1,5 +1,5 @@
-import React from 'react'
-import { data } from '../../Database/data'
+import React, { useEffect, useState } from 'react'
+import { getProducts } from '../../api/productsApi'
 import { useNavigate } from 'react-router-dom'
 
 export const ProductList = ({ 
@@ -10,6 +10,12 @@ export const ProductList = ({
     total,
     setTotal
 }) => {
+
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        getProducts().then((data) => setProducts(data));
+    }, [])
 
     const navigate = useNavigate();
 
@@ -37,7 +43,7 @@ export const ProductList = ({
 
   return (
     <div className='container-items'>
-      {data.map(product => (
+      {products.map(product => (
         <div className="item" key={product.id}>
             <figure onClick={() => handleProductClick(product.id)}>
                 <img
