@@ -23,8 +23,18 @@ export function Checkout({
       id: userLogged.purchases.length,
       items: purchase
     })
-    console.log(userLogged);
-    localStorage.setItem('USER', JSON.stringify(userLogged));
+
+    localStorage.setItem("USER", JSON.stringify({
+      id: userLogged.id,
+      name: userLogged.name,
+      img: userLogged.img,
+      email: userLogged.email,
+      lastLogin: userLogged.lastLogin,
+      walletBalance: userLogged.walletBalance,
+      sales: userLogged.sales,
+      purchases: userLogged.purchases,
+    }))
+    // localStorage.setItem('USER', JSON.stringify(userLogged));
 
   };
 
