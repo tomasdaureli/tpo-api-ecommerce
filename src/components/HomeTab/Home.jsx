@@ -76,21 +76,7 @@ export function Home() {
                         <p className="comment">"Excelente atención al cliente y productos de calidad. ¡Volveré pronto!"</p>
                     </div>
                 </div>
-                <div className="opinion">
-                    <div className="avatar">
-                        <img src="https://img.freepik.com/psd-gratis/ilustracion-3d-avatar-o-perfil-humano_23-2150671122.jpg?size=626&ext=jpg" alt="Avatar" />
-                    </div>
-                    <div className="details">
-                        <div className="rating">
-                            <span className="star">&#9733;</span>
-                            <span className="star">&#9733;</span>
-                            <span className="star">&#9733;</span>
-                            <span className="star">&#9733;</span>
-                            <span className="star">&#9733;</span>
-                        </div>
-                        <p className="comment">"Excelente atención al cliente y productos de calidad. ¡Volveré pronto!"</p>
-                    </div>
-                </div>
+                
 
 
             </section>
