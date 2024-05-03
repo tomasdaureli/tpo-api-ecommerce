@@ -28,7 +28,7 @@ export const Header = ({
 
   return (
     <header>
-			<h1>Tienda Grupo 4</h1>
+			<h1>Ballers Store</h1>
             <ul className='NavBar'>
                 <li><Link to="/home">Home</Link></li>
                 <li><Link to="/catalogo">Catalogo</Link></li>
