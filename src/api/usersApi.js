@@ -36,6 +36,26 @@ export const getUserByUsername = (username) => {
     });
 };
 
+export const postUser = async (user) => {
+  try {
+    const response = await fetch(BASE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user), 
+    });
+    if (!response.ok) {
+      throw new Error("Error en tu peticion");
+    }
+    const users = await response.json();
+    return users[0] || null;
+  } catch (error) {
+    console.error("Error: :", error);
+    return null;
+  }
+};
+
 export const putUserPurchase = async (user, purchase) => {
   try {
     const usuarioRequerido = await getUserById(user.id);
@@ -45,7 +65,7 @@ export const putUserPurchase = async (user, purchase) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(usuarioRequerido), // Convertir el objeto user a JSON
+      body: JSON.stringify(usuarioRequerido), 
     });
     if (!response.ok) {
       throw new Error("Error en tu petición");

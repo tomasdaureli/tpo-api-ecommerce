@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserByEmail, getUserByUsername } from "../../api/usersApi"
+import { getUserByEmail, getUserByUsername, postUser } from "../../api/usersApi"
 
 import "./Login&Register.css";
 
