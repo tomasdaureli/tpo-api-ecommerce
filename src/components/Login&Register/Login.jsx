@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import img from "../../assets/imgs/User.png";
 import { useNavigate } from "react-router-dom";
 import "./Login&Register.css"
+import { getUserByEmail } from "../../api/usersApi"
 export function Login() {
     const [formData, setFormData] = useState({
         email: "",
@@ -31,16 +32,16 @@ export function Login() {
         }));
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        const usersJson = localStorage.getItem("USER_REGISTERED");
-        let users = usersJson ? JSON.parse(usersJson) : [];
-        let usuarioEncontrado = users.find((u) => u.email === formData.email)
+        let usuarioEncontrado = await getUserByEmail(formData.email)
+        console.log(usuarioEncontrado);
         if (!usuarioEncontrado || usuarioEncontrado.password !== formData.password) {
             alert("El usuario ingresado o la contraseña no son correctos")
             return
         };
-        localStorage.setItem("USER", JSON.stringify({ //esta es la forma en la que preveo que la data del usuario va a venir del backend
+        localStorage.setItem("USER", JSON.stringify({
+            id: usuarioEncontrado.id,  //esta es la forma en la que preveo que la data del usuario va a venir del backend
             name: usuarioEncontrado.name,
             img: "",
             email: usuarioEncontrado.email,

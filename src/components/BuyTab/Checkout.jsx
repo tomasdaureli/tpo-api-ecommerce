@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { useNavigate } from 'react-router-dom'
+import { putUserPurchase } from '../../api/usersApi';
 
 export function Checkout({
   user,
@@ -15,23 +16,16 @@ export function Checkout({
 
   const navigate = useNavigate();
 
-  const handlePurchase = (purchase) => {
-    const usersJson = localStorage.getItem('USER_REGISTERED');
-    const userLogged = JSON.parse(localStorage.getItem('USER'));
-    let users = usersJson ? JSON.parse(usersJson) : [];
+  const handlePurchase = async (purchase) => {
+    let userLogged = JSON.parse(localStorage.getItem('USER'));
 
-    const userIndex = users.findIndex(user => user.email === userLogged.email);
-    if (userIndex === -1) {
-      console.error("Usuario no encontrado");
-      return;
-    }
-    userLogged.purchases.push({
+    userLogged = await putUserPurchase(userLogged, {
       id: userLogged.purchases.length,
       items: purchase
-    });
-    users[userIndex].purchases.push({ id: users[userIndex].purchases.length, items: purchase });
+    })
+    console.log(userLogged);
     localStorage.setItem('USER', JSON.stringify(userLogged));
-    localStorage.setItem('USER_REGISTERED', JSON.stringify(users));
+
   };
 
 

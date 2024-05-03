@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUserByEmail, getUserByUsername } from "../../api/usersApi"
+
 import "./Login&Register.css";
 
 export function Register() {
@@ -23,15 +25,6 @@ export function Register() {
         loadUser();
     }, [confirmation]);
 
-    const addUserToLocalStorage = (newUser) => {
-        const usersJson = localStorage.getItem('USER_REGISTERED');
-        let users = usersJson ? JSON.parse(usersJson) : [];
-
-        users.push(newUser);
-
-        localStorage.setItem('USER_REGISTERED', JSON.stringify(users));
-    };
-
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData(prevData => ({
@@ -40,16 +33,26 @@ export function Register() {
         }));
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const { password, confirmPassword } = formData;
+        let mailEncontrado = await getUserByEmail(formData.email)
+        let usernameEncontrado = await getUserByUsername(formData.username)
+        if (mailEncontrado) {
+            alert('El email que esta tratando de utilizar ya se encuentra en uso');
+            return;
+        }
+        if (usernameEncontrado) {
+            alert('El nombre de usuario que esta tratando de utilizar ya se encuentra en uso');
+            return;
+        }
 
         if (password !== confirmPassword) {
             alert('Las contraseñas no coinciden');
             return;
         }
         //esta sera la mannera en la que mandaria al backend para que me conirmen si es posible crear este usuario y la siguiente forma de persistir
-        addUserToLocalStorage({
+        postUser({
             name: formData.username,
             img: "",
             email: formData.email,
