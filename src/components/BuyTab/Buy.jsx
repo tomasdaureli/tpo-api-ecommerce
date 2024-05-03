@@ -13,6 +13,10 @@ export default function Buy() {
   return (
     <>
         <h2>Gracias por su compra</h2>
+        
+
+
+
         <button onClick={onBackHomePage}>Volver a la pagina de inicio</button>
     </>
   )
