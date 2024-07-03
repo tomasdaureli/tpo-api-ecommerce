@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserByEmail, getUserByUsername, postUser } from "../../api/usersApi"
+import { registerUser } from "../../api/usersApi"
 
 import "./Login&Register.css";
 
@@ -36,31 +36,16 @@ export function Register() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const { password, confirmPassword } = formData;
-        let mailEncontrado = await getUserByEmail(formData.email)
-        let usernameEncontrado = await getUserByUsername(formData.username)
-        if (mailEncontrado) {
-            alert('El email que esta tratando de utilizar ya se encuentra en uso');
-            return;
-        }
-        if (usernameEncontrado) {
-            alert('El nombre de usuario que esta tratando de utilizar ya se encuentra en uso');
-            return;
-        }
-
         if (password !== confirmPassword) {
             alert('Las contraseñas no coinciden');
             return;
         }
-        //esta sera la mannera en la que mandaria al backend para que me conirmen si es posible crear este usuario y la siguiente forma de persistir
-        postUser({
+        registerUser({
             name: formData.username,
-            img: "",
+            lastName: formData.lastname || " - ",
             email: formData.email,
             password: formData.password,
-            lastLogin: "",
-            walletBalance: "",
-            sales: [],
-            purchases: [],
+            role: formData.role
         })
         setFormData({ username: '', email: '', password: '', confirmPassword: '' });
         navigate('/', { replace: true });
@@ -82,6 +67,13 @@ export function Register() {
 
                 <label htmlFor="confirmPassword">Confirmar contraseña:</label><br />
                 <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required /><br />
+
+                <label for="rol">Rol:</label>
+                <select id="rol" name="rol" required>
+                    <option value="" disabled selected>-- Seleccione una opción --</option>
+                    <option value="VENDEDOR">Vendedor</option>
+                    <option value="COMPRADOR">Comprador</option>
+                </select>
 
                 <input type="submit" value="Registrar" />
             </form>

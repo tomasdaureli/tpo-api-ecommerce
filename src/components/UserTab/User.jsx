@@ -1,25 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import './User.css';
 import { UserPnSList } from './UserPnSList';
 import defaultImg from "../../assets/imgs/User.png";
+import { getUserByJWB } from '../../api/usersApi';
 
-export function User({
-  user,
-  setUser
-}) {
+export function User() {
+  const [user, setUser] = useState({})
+  const [confirmationChange, setConfirmationChange] = useState(false);
+
   let navigate = useNavigate();
+
   useEffect(() => {
-    const loadUser = () => {
-      const userJson = JSON.parse(localStorage.getItem('USER'));
-      if (userJson) {
-        setUser(userJson);
+    const loadUser = async () => {
+      const userResp = await getUserByJWB()
+      console.log(userResp);
+      localStorage.setItem("USER", JSON.stringify(userResp))
+      if (userResp) {
+        setUser(userResp);
       }
     };
 
     loadUser();
-  }, []);
+  }, [confirmationChange]);
+
+  const refreshProducts = () => {
+    setConfirmationChange(prev => !prev); // Toggle para forzar re-render
+  };
 
   function LogOut() {
     localStorage.removeItem("USER")
@@ -34,7 +42,7 @@ export function User({
           <img className='userImage' src={user?.img ? user?.img : defaultImg} alt="User" />
           <div className='Udata'>
             <h1>{user.name}</h1>
-            <p>Email: {user.email}<br />Última conexión: {user.lastLogin}</p>
+            <p>Email: {user.email}<br />Última conexión: {user.lastLogin ? user.lastLogin : "Just Now"}</p>
           </div>
           <button className="logoutButton" onClick={() => { LogOut() }}>
             Logout
@@ -42,7 +50,7 @@ export function User({
         </div>
       )}
 
-      <UserPnSList user={user} />
+      <UserPnSList user={user} refreshProducts={refreshProducts} />
     </>
   );
 }

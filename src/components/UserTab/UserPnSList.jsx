@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import './User.css'
 import { ProductUserCard } from '../Cards/productUserCard';
 
-export function UserPnSList({ user }) {
+export function UserPnSList({ user, refreshProducts }) {
 
     const [currentIndex, setCurrentIndex] = useState(0);
-    const bulkSize = 6;
+    const bulkSize = 4;
 
-    const purchasesBulks = user?.purchases
-        ? Array.from({ length: Math.ceil(user.purchases.length / bulkSize) }, (_, i) =>
-            user.purchases.slice(i * bulkSize, i * bulkSize + bulkSize)
+    const purchasesBulks = user?.buys
+        ? Array.from({ length: Math.ceil(user.buys.length / bulkSize) }, (_, i) =>
+            user.buys.slice(i * bulkSize, i * bulkSize + bulkSize)
         )
         : [];
 
@@ -26,7 +26,7 @@ export function UserPnSList({ user }) {
         <>
             {!user ? (<div>Cargando datos del usuario...</div>) : (<div className="container">
                 <div className="userPurchases">
-                    <p>Total de compras: {user?.purchases?.length}</p>
+                    <p>Total de compras: {user?.buys?.length}</p>
                     <div className='pagination-container'>
                         <button className='page-button' onClick={previousBulk} disabled={currentIndex === 0}>
                             Anterior
@@ -38,7 +38,7 @@ export function UserPnSList({ user }) {
                     </div>
                     <div className='user-container-items'>
                         {purchasesBulks[currentIndex]?.map(product => (
-                            <ProductUserCard product={product} key={product.id} />
+                            <ProductUserCard product={product} key={product.id} refreshProducts={refreshProducts} />
                         ))}
                     </div>
 

@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { useNavigate } from 'react-router-dom'
-import { putUserPurchase } from '../../api/usersApi';
+import { postUserPurchase } from '../../api/usersApi';
+import "./Checkout.css"
 
 export function Checkout({
   user,
@@ -13,34 +14,37 @@ export function Checkout({
   count,
   setCountProducts
 }) {
-
+  const [discountCode, setDiscountCode] = useState(false)
+  
   const navigate = useNavigate();
 
   const handlePurchase = async (purchase) => {
+    console.log(discountCode);
     let userLogged = JSON.parse(localStorage.getItem('USER'));
+    const productsToSend = purchase.map(product => ({
+      productId: product.id,
+      quantity: product.quantity
+    }));
 
-    userLogged = await putUserPurchase(userLogged, {
-      id: userLogged.purchases.length,
-      items: purchase
-    })
+    userLogged = await postUserPurchase(userLogged, productsToSend, discountCode)
 
-    localStorage.setItem("USER", JSON.stringify({
-      id: userLogged.id,
-      name: userLogged.name,
-      img: userLogged.img,
-      email: userLogged.email,
-      lastLogin: userLogged.lastLogin,
-      walletBalance: userLogged.walletBalance,
-      sales: userLogged.sales,
-      purchases: userLogged.purchases,
-    }))
-    // localStorage.setItem('USER', JSON.stringify(userLogged));
-
+    // localStorage.setItem("USER", JSON.stringify({
+    //   id: userLogged.id,
+    //   name: userLogged.name,
+    //   img: userLogged.img,
+    //   email: userLogged.email,
+    //   lastLogin: userLogged.lastLogin,
+    //   walletBalance: userLogged.walletBalance,
+    //   sales: userLogged.sales,
+    //   purchases: userLogged.purchases,
+    // }))
+  };
+  const handleChangeDiscountCode = (event) => {
+    const { name, value } = event.target;
+    setDiscountCode(value)
   };
 
-
   const onConfirmBuy = () => {
-
     handlePurchase(allProducts)
     setAllProducts([]);
     setTotal(0);
@@ -92,6 +96,7 @@ export function Checkout({
           ))}
         </ul>
       </div>
+      <input type="number" name="discountCode" id="discountCode" onChange={handleChangeDiscountCode} />
       <h1>Total de la compra: ${total}</h1>
       <button className='confirm-button' onClick={() => onConfirmBuy()}>Confirmar compra</button>
     </>

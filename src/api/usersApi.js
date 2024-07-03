@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/users";
+const BASE_URL = "http://localhost:8080";
 
 export const getAllUsers = () => {
   return fetch(BASE_URL).then((response) => response.json());
@@ -7,43 +7,36 @@ export const getAllUsers = () => {
 export const getUserById = (id) => {
   return fetch(`${BASE_URL}/${id}`).then((response) => response.json());
 };
-export const getUserByEmail = (email) => {
-  return fetch(`${BASE_URL}?email=${email}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error en tu peticion");
-      }
-      return response.json();
-    })
-    .then((users) => users[0] || null)
-    .catch((error) => {
-      console.error("Error: :", error);
-      return null;
+
+export const getUserByJWB = async (id) => {
+  const token = localStorage.getItem("access_token");
+  try {
+    const response = await fetch(`${BASE_URL}/user/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
-};
-export const getUserByUsername = (username) => {
-  return fetch(`${BASE_URL}?name=${username}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error en tu peticion");
-      }
-      return response.json();
-    })
-    .then((users) => users[0] || null)
-    .catch((error) => {
-      console.error("Error: :", error);
-      return null;
-    });
+    if (!response.ok) {
+      throw new Error("No se pudo obtener la información del usuario");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error: :", error);
+    return null;
+  }
 };
 
-export const postUser = async (user) => {
+export const registerUser = async (user) => {
   try {
-    const response = await fetch(BASE_URL, {
+    const response = await fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user), 
+      body: JSON.stringify(user),
     });
     if (!response.ok) {
       throw new Error("Error en tu peticion");
@@ -55,17 +48,39 @@ export const postUser = async (user) => {
     return null;
   }
 };
-
-export const putUserPurchase = async (user, purchase) => {
+export const loginUser = async (user) => {
   try {
-    const usuarioRequerido = await getUserById(user.id);
-    usuarioRequerido.purchases.push(purchase);
-    const response = await fetch(`${BASE_URL}/${user.id}`, {
-      method: "PUT",
+    const response = await fetch(`${BASE_URL}/auth/authenticate`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(usuarioRequerido), 
+      body: JSON.stringify(user),
+    });
+    if (!response.ok) {
+      throw new Error("Error en tu peticion");
+    }
+    const resp = await response.json();
+    return resp;
+  } catch (error) {
+    console.error("Error: :", error);
+    return null;
+  }
+};
+
+export const postUserPurchase = async (user, purchase, discountCode) => {
+  try {
+    const token = localStorage.getItem("access_token");
+    const response = await fetch(`${BASE_URL}/buys`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        items: purchase,
+        discountCode: discountCode ? discountCode : null,
+      }),
     });
     if (!response.ok) {
       throw new Error("Error en tu petición");

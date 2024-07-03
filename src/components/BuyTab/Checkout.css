@@ -1,0 +1,83 @@
+/* Estilos generales para el formulario */
+.button-back {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 10px 0;
+    color: #007BFF;
+}
+
+.icon-cart {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.direccion-container {
+    background-color: #f3f3f3;
+    padding: 20px;
+    border-radius: 8px;
+    margin: auto;
+}
+
+.direccion-container h2 {
+    margin-bottom: 15px;
+}
+
+.direccion-container label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: 600;
+}
+
+.direccion-container input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.products-container {
+    margin: 20px 0;
+}
+
+.product-container {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.product-container img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.product-container p {
+    margin: 0 10px;
+}
+
+.confirm-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.confirm-button:hover {
+    background-color: #218838;
+}
+
+strong {
+    color: #333;
+}

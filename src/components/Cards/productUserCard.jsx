@@ -1,17 +1,15 @@
-import React from 'react'
-import "./productUserCard.css"
+import React, { useEffect, useState } from 'react';
+import "./productUserCard.css";
+import { patchConfirmPurchase } from '../../api/productsApi';
 
-export function ProductUserCard({ product }) {
-    console.log(product);
+export function ProductUserCard({ product, refreshProducts }) {
 
-    const calcularTotal = () => {
-        let total = 0;
-        product.items.forEach(element => {
-            total += element.price * element.quantity;
-        });
-
-        return total;
-    }
+    const handleConfirmBuy = async () => {
+        const resp = await patchConfirmPurchase(product.number)
+        if (resp) {
+            refreshProducts()
+        }
+    };
 
     return (
         <div className="userItem">
@@ -22,8 +20,9 @@ export function ProductUserCard({ product }) {
                 ))}
             </div>
             <div className="user-info-product">
-                <p className="price">Total: ${calcularTotal()}</p>
-                <div className='timestamp'>Comprada el dia: {product.timestamp}</div>
+                <p className="price">Total: ${product.total}</p>
+                <div className='status'>Estado de la compra: {product.status}</div>
+                {product.status === "PENDING" ? <button type="button" className='send-button' onClick={handleConfirmBuy}>Terminar compra</button> : null}
             </div>
         </div>
     );
