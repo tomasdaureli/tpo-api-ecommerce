@@ -15,7 +15,6 @@ export function User() {
   useEffect(() => {
     const loadUser = async () => {
       const userResp = await getUserByJWB()
-      console.log(userResp);
       localStorage.setItem("USER", JSON.stringify(userResp))
       if (userResp) {
         setUser(userResp);

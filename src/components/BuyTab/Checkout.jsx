@@ -15,7 +15,7 @@ export function Checkout({
   setCountProducts
 }) {
   const [discountCode, setDiscountCode] = useState(false)
-  
+
   const navigate = useNavigate();
 
   const handlePurchase = async (purchase) => {
@@ -27,17 +27,6 @@ export function Checkout({
     }));
 
     userLogged = await postUserPurchase(userLogged, productsToSend, discountCode)
-
-    // localStorage.setItem("USER", JSON.stringify({
-    //   id: userLogged.id,
-    //   name: userLogged.name,
-    //   img: userLogged.img,
-    //   email: userLogged.email,
-    //   lastLogin: userLogged.lastLogin,
-    //   walletBalance: userLogged.walletBalance,
-    //   sales: userLogged.sales,
-    //   purchases: userLogged.purchases,
-    // }))
   };
   const handleChangeDiscountCode = (event) => {
     const { name, value } = event.target;

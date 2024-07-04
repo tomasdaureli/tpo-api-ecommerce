@@ -41,7 +41,6 @@ export function Login() {
         })
         localStorage.setItem("access_token", resp.accessToken)
         const userResp = await getUserByJWB()
-        console.log(userResp);
         localStorage.setItem("USER", JSON.stringify(userResp))
         setFormData({ email: "", password: "" });
         setConfirmation(true)

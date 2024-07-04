@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { getProducts } from '../../api/productsApi'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { getProducts, getProductsBySeller } from "../../api/productsApi";
+import { useNavigate } from "react-router-dom";
 import img from "../../assets/imgs/noProductImage.png";
+import { getUserByJWB } from "../../api/usersApi";
+
+import "./productList.css";
+import AddProductForm from "../Forms/AddProductForm";
 
 export const ProductList = ({
     allProducts,
@@ -9,24 +13,35 @@ export const ProductList = ({
     countProducts,
     setCountProducts,
     total,
-    setTotal
+    setTotal,
 }) => {
     const [products, setProducts] = useState([]);
+    const [user, setUser] = useState({});
+    const [createProduct, setCreateProduct] = useState(false);
 
     useEffect(() => {
-        getProducts().then((data) => setProducts(data));
-    }, [])
+        const loadCatalog = async () => {
+            let userLogged = JSON.parse(localStorage.getItem("USER"));
+            if (userLogged) {
+                setUser(userLogged);
+            }
+            if (userLogged.role == "VENDEDOR") {
+                getProductsBySeller(userLogged.id).then((data) => setProducts(data));
+            } else {
+                getProducts().then((data) => setProducts(data));
+            }
+        };
+        loadCatalog();
+    }, [createProduct]);
 
     const navigate = useNavigate();
 
-    const onAddProduct = product => {
-        const existingProduct = allProducts.find(item => item.id === product.id);
+    const onAddProduct = (product) => {
+        const existingProduct = allProducts.find((item) => item.id === product.id);
 
         if (existingProduct) {
-            const updatedProducts = allProducts.map(item =>
-                item.id === product.id
-                    ? { ...item, quantity: item.quantity + 1 }
-                    : item
+            const updatedProducts = allProducts.map((item) =>
+                item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
             );
             setAllProducts(updatedProducts);
         } else {
@@ -38,25 +53,49 @@ export const ProductList = ({
 
     const handleProductClick = (productId) => {
         navigate(`/catalogo/${productId}`);
-    }
+    };
 
     return (
-        <div className='container-items'>
-            {products.map(product => (
-                <div className="item" key={product.id}>
-                    <figure onClick={() => handleProductClick(product.id)}>
-                        <img
-                            src={product.urlImage ? product.urlImage : img}
-                            alt={product.productName}
-                        />
-                    </figure>
-                    <div className="info-product">
-                        <h2>{product.productName}</h2>
-                        <p className="price">${product.price}</p>
-                        <button onClick={() => onAddProduct(product)}>Añadir al carrito</button>
-                    </div>
+        <>
+            {user.role === "VENDEDOR" && !createProduct ? (
+                <div>
+                    <h1>Tus Productos</h1>
+                    <button className="create-button" onClick={() => setCreateProduct(true)}>Crear producto</button>
                 </div>
-            ))}
-        </div>
-    )
-}
+            ) : (
+                ""
+            )}
+            {createProduct ? (
+                <AddProductForm setCreateProduct={setCreateProduct} />
+            ) : (
+                <div className="container-items">
+                    {products.length > 0 ? (
+                        products.map((product) => (
+                            <div className="item" key={product.id}>
+                                <figure onClick={() => handleProductClick(product.id)}>
+                                    <img
+                                        src={product.urlImage || img}
+                                        alt={product.productName}
+                                    />
+                                </figure>
+                                <div className="info-product">
+                                    <h2>{product.productName}</h2>
+                                    <p className="price">${product.price}</p>
+                                    {user.role === "VENDEDOR" ? (
+                                        ""
+                                    ) : (
+                                        <button onClick={() => onAddProduct(product)}>
+                                            Añadir al carrito
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div>No hay ningún producto para mostrar...</div>
+                    )}
+                </div>
+            )}
+        </>
+    );
+};
