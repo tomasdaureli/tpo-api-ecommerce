@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "./productUserCard.css";
 import { patchConfirmPurchase } from '../../api/productsApi';
 
-export function ProductUserCard({ product, refreshProducts }) {
+export function ProductBuyerCard({ product, refreshProducts }) {
 
     const handleConfirmBuy = async () => {
         const resp = await patchConfirmPurchase(product.number)

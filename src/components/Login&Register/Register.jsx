@@ -9,7 +9,8 @@ export function Register() {
         username: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        role: '',
     });
     const [confirmation, setConfirmation] = useState(false)
 
@@ -60,7 +61,7 @@ export function Register() {
                 <label htmlFor="username">Nombre de usuario:</label><br />
                 <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} required /><br />
                 <label htmlFor="email">Email:</label><br />
-                <input type="text" id="email" name="email" value={formData.email} onChange={handleChange} required /><br />
+                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required /><br />
 
                 <label htmlFor="password">Contraseña:</label><br />
                 <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required /><br />
@@ -68,8 +69,8 @@ export function Register() {
                 <label htmlFor="confirmPassword">Confirmar contraseña:</label><br />
                 <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required /><br />
 
-                <label for="rol">Rol:</label>
-                <select id="rol" name="rol" required>
+                <label for="role">Rol:</label>
+                <select id="role" name="role" value={formData.role} onChange={handleChange} required>
                     <option value="" disabled selected>-- Seleccione una opción --</option>
                     <option value="VENDEDOR">Vendedor</option>
                     <option value="COMPRADOR">Comprador</option>
