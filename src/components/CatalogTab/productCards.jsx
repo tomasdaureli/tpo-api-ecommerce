@@ -29,13 +29,13 @@ export const ProductCards = ({
 
   return (
     <>
-      <div
-        className="item"
-        key={product.id}
-        onClick={() => handleProductClick(product.id)}
-      >
+      <div className="item" key={product.id}>
         <figure>
-          <img src={img} alt={product.productName} />
+          <img
+            src={img}
+            alt={product.productName}
+            onClick={() => handleProductClick(product.id)}
+          />
         </figure>
         <div className="info-product">
           <h2>{product.productName}</h2>
