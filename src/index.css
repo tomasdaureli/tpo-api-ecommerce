@@ -61,7 +61,7 @@ header {
     z-index: 1;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
     border-radius: 10px;
-    
+
 }
 
 .cart-product {
@@ -210,60 +210,7 @@ header {
     border-radius: 0;
 }
 
-.container-product-detail {
-    display: flex;
-    flex-direction: column;
-}
 
-.img-product-detail {
-    flex: 1;
-    margin-right: 20px;
-}
-
-.img-product-detail img {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
-}
-
-.text-product-detail button {
-    border: none;
-    background: none;
-    background-color: #000;
-    color: #fff;
-    padding: 15px 10px;
-    cursor: pointer;
-}
-
-.text-product-detail {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.text-product-detail p {
-    display: inline;
-    font-size: larger;
-}
-
-.button-back {
-    align-self: flex-start;
-    margin-bottom: 10px;
-}
-
-.description {
-    display: flex;
-    text-align: left;
-    flex-direction: row;
-    white-space: pre-line;
-}
-
-.description-text {
-    display: flex;
-    text-align: left;
-    flex-direction: row;
-    white-space: pre-line;
-}
 
 .products-container {
     display: flex;
@@ -271,54 +218,54 @@ header {
     gap: 20px;
     justify-content: center;
     align-items: flex-start;
-  }
-  
-  .product-container {
+}
+
+.product-container {
     display: flex;
     align-items: center;
     border: 1px solid #ccc;
     padding: 10px;
     width: 300px;
-  }
-  
-  .product-container img {
+}
+
+.product-container img {
     width: 80px;
     height: 80px;
     margin-right: 10px;
-  }
-  
-  .product-container p {
-    margin: 0;
-  }
+}
 
-  .direccion-container {
+.product-container p {
+    margin: 0;
+}
+
+.direccion-container {
     max-width: 400px;
     margin: 0 auto;
-  }
-  
-  .direccion-container h2 {
+}
+
+.direccion-container h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
-  }
-  
-  .direccion-container label {
+}
+
+.direccion-container label {
     display: block;
     margin-bottom: 5px;
-  }
-  
-  .direccion-container input[type="text"] {
+}
+
+.direccion-container input[type="text"] {
     width: 100%;
     padding: 8px;
     margin-bottom: 15px;
     border-radius: 5px;
     border: 1px solid #ccc;
-  }
-  
-  .direccion-container input[type="text"]:focus {
+}
+
+.direccion-container input[type="text"]:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  }
+}
 
 .confirm-button {
     border: none;
@@ -328,4 +275,3 @@ header {
     padding: 15px 10px;
     cursor: pointer;
 }
-  

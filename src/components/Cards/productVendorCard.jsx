@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import "./productUserCard.css";
 import { patchConfirmPurchase } from '../../api/productsApi';
 import img from "../../assets/imgs/noProductImage.png";
+import { useNavigate } from 'react-router-dom';
 
 export function ProductVendorCard({ product, refreshProducts }) {
-    const handleConfirmBuy = async () => {
-        const resp = await patchConfirmPurchase(product.number)
-        if (resp) {
-            refreshProducts()
-        }
+    const navigate = useNavigate();
+    const handleUpdateProduct = async (id) => {
+        navigate(`/catalogo/${id}`);
     };
 
     return (
@@ -20,6 +19,7 @@ export function ProductVendorCard({ product, refreshProducts }) {
                     <p className="product-price">Precio: ${product.price}</p>
                     <p className="product-stock">Total stock: {product.stock}</p>
                     <p className="product-sold">Total vendido: {product.sold}</p>
+                    <button type="button" className='send-button' onClick={() => handleUpdateProduct(product.id)}>Actualizar informacion</button>
                 </div>
             </div>
         </div>

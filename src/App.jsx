@@ -8,7 +8,7 @@ import { Login } from './components/Login&Register/Login'
 import { Register } from './components/Login&Register/Register'
 import { Catalog } from './components/CatalogTab/Catalog'
 import { CatalogLayout } from './components/CatalogTab/CatalogLayout'
-import { Product } from './components/CatalogTab/Product'
+import { ProductInspection } from './components/CatalogTab/productDetail/ProductInspection'
 import { User } from './components/UserTab/User'
 import { Header } from './components/Header'
 import { Checkout } from './components/BuyTab/Checkout'
@@ -45,7 +45,7 @@ function App() {
               countProducts={countProducts}
               setCountProducts={setCountProducts} />
             } />
-            <Route path=':productId' element={<Product
+            <Route path=':productId' element={<ProductInspection
               allProducts={allProducts}
               setAllProducts={setAllProducts}
               total={total}

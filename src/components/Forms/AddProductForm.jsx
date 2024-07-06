@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import './AddProductForm.css'; // Asegúrate de tener este archivo en tu proyecto
-import { postProduct } from '../../api/productsApi';
+import { postProduct, updateProduct } from '../../api/productsApi';
 
-function AddProductForm({ setCreateProduct }) {
+function AddProductForm({ setCreateProduct, productToUpdate }) {
     const [product, setProduct] = useState({
-        productName: '',
-        price: '',
-        urlImage: '',
-        stock: '',
-        description: '',
-        category: '',
-        subcategory: ''
+        productName: productToUpdate?.productName || '',
+        price: productToUpdate?.price || '',
+        urlImage: productToUpdate?.urlImage || '',
+        stock: productToUpdate?.stock || '',
+        description: productToUpdate?.description || '',
+        category: productToUpdate?.category || '',
+        subcategory: productToUpdate?.subcategory || ''
     });
 
     const handleChange = (event) => {
@@ -39,6 +39,27 @@ function AddProductForm({ setCreateProduct }) {
 
     };
 
+    const handleCancel = async (event) => {
+        event.preventDefault();
+        setCreateProduct(false)
+    };
+
+    const handleUpdate = async (event) => {
+        event.preventDefault();
+        const response = await updateProduct(product, productToUpdate.id);
+        if (response && response.id) {
+            setProduct({
+                productName: '',
+                price: '',
+                urlImage: '',
+                stock: '',
+                description: '',
+                category: '',
+                subcategory: ''
+            });
+            setCreateProduct(false)
+        }
+    };
     return (
         <>
             <form className="add-product-form" onSubmit={handleSubmit}>
@@ -104,7 +125,7 @@ function AddProductForm({ setCreateProduct }) {
                             <option value="">Seleccione una categoría</option>
                             <option value="CLOTHES">Ropa</option>
                             <option value="FOOTWEAR">Calzado</option>
-                            <option value="ACCESSORIES">Accesorios</option>
+                            <option value="ACCESORIES">Accesorios</option>
                         </select>
                     </div>
                     <div className="input-group">
@@ -137,8 +158,8 @@ function AddProductForm({ setCreateProduct }) {
 
 
 
-                <button className='send-button' type="submit">Agregar Producto</button>
-                <button className='cancel-button' onClick={() => setCreateProduct(false)}>Cancelar</button>
+                {productToUpdate ? <button className='send-button' onClick={handleUpdate}>Actualizar Producto</button> : <button className='send-button' type="submit" >Agregar Producto</button>}
+                <button className='cancel-button' onClick={handleCancel}>Cancelar</button>
             </form>
 
         </>
