@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import {
-  getProducts,
-  getProductsByParameters,
-  getProductsBySeller,
-} from "../../api/productsApi";
 import { useNavigate } from "react-router-dom";
 
 import "./productList.css";
 import AddProductForm from "../Forms/AddProductForm";
 import { ProductCards } from "./productCards";
 import SearchBar from "../utils/SearchBar";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getProducts,
+  getProductsByParameters,
+  getProductsBySeller,
+} from "../../Features/Products/ProductAction";
 
 export const ProductList = ({
   allProducts,
@@ -19,12 +20,14 @@ export const ProductList = ({
   total,
   setTotal,
 }) => {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const { products, status, error } = useSelector((state) => state.products);
   const [purchasesBulks, setPurchasesBulks] = useState([]);
   const [user, setUser] = useState({});
   const [createProduct, setCreateProduct] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const bulkSize = 3;
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,9 +37,9 @@ export const ProductList = ({
         setUser(userLogged);
       }
       if (userLogged.role == "VENDEDOR") {
-        getProductsBySeller(userLogged.id).then((data) => setProducts(data));
+        dispatch(getProductsBySeller(userLogged.id));
       } else {
-        getProducts().then((data) => setProducts(data));
+        dispatch(getProducts());
       }
     };
     loadCatalog();
@@ -82,10 +85,12 @@ export const ProductList = ({
   };
 
   const handleSearch = async (e) => {
-    const resp = await getProductsByParameters(e.category, e.subcategory);
-    if (resp.length > 0) {
-      setProducts(resp);
-    }
+    dispatch(
+      getProductsByParameters({
+        category: e.category,
+        subcategory: e.subcategory,
+      })
+    );
   };
   return (
     <>

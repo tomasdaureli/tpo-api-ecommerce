@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import "./productUserCard.css";
-import { patchConfirmPurchase } from '../../api/productsApi';
 import img from "../../assets/imgs/noProductImage.png";
 import { useNavigate } from 'react-router-dom';
 
