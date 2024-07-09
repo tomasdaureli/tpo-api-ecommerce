@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { deleteProduct, getProductById } from "../../../api/productsApi";
+import { deleteProduct } from "../../../api/productsApi";
 import imgen from "../../../assets/imgs/noProductImage.png";
-
-import "./productInspection.css";
-import { getUserByJWB } from "../../../api/usersApi";
 import AddProductForm from "../../Forms/AddProductForm";
 import ConfirmationModal from "../../modals/ConfirmationModal";
+import { useDispatch, useSelector } from "react-redux";
+import { getProductById } from "../../../Features/Products/ProductAction";
+import "./productInspection.css";
+import { getUserByJWT } from "../../../Features/User/UserAction";
 
 export function ProductInspection({
   allProducts,
@@ -16,10 +17,11 @@ export function ProductInspection({
   total,
   setTotal,
 }) {
-  const [product, setProduct] = useState([]);
+  const dispatch = useDispatch();
+  const { product, status, error } = useSelector((state) => state.products);
+  const { user } = useSelector((state) => state.user);
   const { productId } = useParams();
   const navigate = useNavigate();
-  const [user, setUser] = useState({});
   const [createProduct, setCreateProduct] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -27,29 +29,39 @@ export function ProductInspection({
   const [img, setImg] = useState([]);
 
   useEffect(() => {
-    getProductById(formattedProductId).then(async (data) => {
-      setProduct(data);
+    dispatch(getProductById(formattedProductId));
+    const loadUser = async () => {
+      dispatch(getUserByJWT())
+        .unwrap()
+        .then((result) => {
+          localStorage.setItem("USER", JSON.stringify(result));
+          setFormData({ email: "", password: "" });
+          setConfirmation(true);
+        })
+        .catch((error) => {
+          console.error("Login failed:", error);
+        });
+    };
+    loadUser();
+  }, [createProduct]);
+
+  useEffect(() => {
+    const loadProduct = async () => {
       try {
-        const response = await fetch(data.urlImage);
+        const response = await fetch(product.urlImage);
         if (response.ok) {
-          setImg(data.urlImage);
+          setImg(product.urlImage);
         } else {
           setImg(imgen);
         }
       } catch (error) {
+        console.log(error);
         setImg(imgen);
-      }
-    });
-    const loadUser = async () => {
-      const userResp = await getUserByJWB();
-      localStorage.setItem("USER", JSON.stringify(userResp));
-      if (userResp) {
-        setUser(userResp);
       }
     };
 
-    loadUser();
-  }, [createProduct]);
+    loadProduct();
+  }, [dispatch, product]);
 
   const formattedProductId = parseInt(productId, 10);
 
