@@ -134,3 +134,79 @@ export const patchConfirmPurchase = createAsyncThunk(
     }
   }
 );
+
+export const postProduct = createAsyncThunk(
+  "products/postProduct",
+  async (product, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${BASE_URL}/products`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(product),
+      });
+      if (!response.ok) {
+        throw new Error("Error en tu petición");
+      }
+      console.log(response);
+      return await response.json();
+    } catch (error) {
+      console.error("Error:", error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateProduct = createAsyncThunk(
+  "products/updateProduct",
+  async ({ product, id }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`${BASE_URL}/products/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(product),
+      });
+      if (!response.ok) {
+        throw new Error("Error en tu petición");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error:", error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  "products/deleteProduct",
+  async (id, { rejectWithValue }) => {
+    const token = localStorage.getItem("access_token");
+    try {
+      const response = await fetch(`${BASE_URL}/products/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("No se pudieron eliminar los productos");
+      }
+      if (response.status === 204) {
+        return null;
+      } else {
+        return await response.json();
+      }
+    } catch (error) {
+      console.error("Error: :", error);
+      return rejectWithValue(error.message);
+    }
+  }
+);

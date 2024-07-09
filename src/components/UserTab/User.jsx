@@ -22,7 +22,7 @@ export function User() {
           localStorage.setItem("USER", JSON.stringify(result));
         })
         .catch((error) => {
-          console.error("Login failed:", error);
+          console.error("Get user by jwt failed:", error);
         });
     };
 

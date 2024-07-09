@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import "./AddProductForm.css"; // Asegúrate de tener este archivo en tu proyecto
-import { postProduct, updateProduct } from "../../api/productsApi";
+import {
+  postProduct,
+  updateProduct,
+} from "../../Features/Products/ProductAction.js";
+import { useDispatch, useSelector } from "react-redux";
 
+import "./AddProductForm.css";
 function AddProductForm({ setCreateProduct, productToUpdate }) {
-  const [product, setProduct] = useState({
+  const dispatch = useDispatch();
+  const { products, status, error } = useSelector((state) => state.products);
+  const [productToSend, setProductToSend] = useState({
     productName: productToUpdate?.productName || "",
     price: productToUpdate?.price || "",
     urlImage: productToUpdate?.urlImage || "",
@@ -15,7 +21,7 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setProduct((prevProduct) => ({
+    setProductToSend((prevProduct) => ({
       ...prevProduct,
       [name]: value,
     }));
@@ -23,19 +29,22 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await postProduct(product);
-    if (response && response.id) {
-      setProduct({
-        productName: "",
-        price: "",
-        urlImage: "",
-        stock: "",
-        description: "",
-        category: "",
-        subcategory: "",
+    dispatch(postProduct(productToSend))
+      .unwrap()
+      .then((response) => {
+        if (response && response.id) {
+          setProductToSend({
+            productName: "",
+            price: "",
+            urlImage: "",
+            stock: "",
+            description: "",
+            category: "",
+            subcategory: "",
+          });
+          setCreateProduct(false);
+        }
       });
-      setCreateProduct(false);
-    }
   };
 
   const handleCancel = async (event) => {
@@ -45,19 +54,25 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
 
   const handleUpdate = async (event) => {
     event.preventDefault();
-    const response = await updateProduct(product, productToUpdate.id);
-    if (response && response.id) {
-      setProduct({
-        productName: "",
-        price: "",
-        urlImage: "",
-        stock: "",
-        description: "",
-        category: "",
-        subcategory: "",
+    dispatch(updateProduct({ product: productToSend, id: productToUpdate.id }))
+      .unwrap()
+      .then((response) => {
+        if (response && response.id) {
+          setProductToSend({
+            productName: "",
+            price: "",
+            urlImage: "",
+            stock: "",
+            description: "",
+            category: "",
+            subcategory: "",
+          });
+          setCreateProduct(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Add product form failed:", error);
       });
-      setCreateProduct(false);
-    }
   };
   return (
     <>
@@ -68,7 +83,7 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
           type="text"
           id="productName"
           name="productName"
-          value={product.productName}
+          value={productToSend.productName}
           onChange={handleChange}
           required
         />
@@ -77,7 +92,7 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
           type="text"
           id="urlImage"
           name="urlImage"
-          value={product.urlImage}
+          value={productToSend.urlImage}
           onChange={handleChange}
           required
         />
@@ -87,7 +102,7 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
           type="number"
           id="price"
           name="price"
-          value={product.price}
+          value={productToSend.price}
           onChange={handleChange}
           required
         />
@@ -97,7 +112,7 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
           type="number"
           id="stock"
           name="stock"
-          value={product.stock}
+          value={productToSend.stock}
           onChange={handleChange}
           required
         />
@@ -106,7 +121,7 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
         <textarea
           id="description"
           name="description"
-          value={product.description}
+          value={productToSend.description}
           onChange={handleChange}
           required
         />
@@ -117,7 +132,7 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
             <select
               id="category"
               name="category"
-              value={product.category}
+              value={productToSend.category}
               onChange={handleChange}
               required
             >
@@ -132,7 +147,7 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
             <select
               id="subcategory"
               name="subcategory"
-              value={product.subcategory}
+              value={productToSend.subcategory}
               onChange={handleChange}
               required
             >

@@ -36,7 +36,7 @@ export function Checkout({
         navigate("/buy/success");
       })
       .catch((error) => {
-        console.error("Login failed:", error);
+        console.error("Checkout failed:", error);
       });
   };
   const handleChangeDiscountCode = (event) => {

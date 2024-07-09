@@ -5,6 +5,9 @@ import {
   getProductsByParameters,
   getProductsBySeller,
   patchConfirmPurchase,
+  postProduct,
+  updateProduct,
+  deleteProduct,
 } from "./ProductAction";
 
 const initialState = {
@@ -73,6 +76,41 @@ const productsSlice = createSlice({
       .addCase(patchConfirmPurchase.rejected, (state, action) => {
         state.error = action.payload;
         state.status = "failed";
+      })
+      .addCase(postProduct.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(postProduct.fulfilled, (state, action) => {
+        state.products.push(action.payload);
+        state.status = "succeeded";
+      })
+      .addCase(postProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(updateProduct.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        const index = state.products.findIndex((p) => p.id === action.payload.id);
+        if (index !== -1) {
+          state.products[index] = action.payload;
+        }
+        state.status = "succeeded";
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(deleteProduct.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       });
   },
 });

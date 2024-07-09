@@ -90,7 +90,14 @@ export const ProductList = ({
         category: e.category,
         subcategory: e.subcategory,
       })
-    );
+    )
+      .unwrap()
+      .then((result) => {
+        setCurrentIndex(0);
+      })
+      .catch((error) => {
+        console.error("Failed:", error);
+      });
   };
   return (
     <>
@@ -105,44 +112,47 @@ export const ProductList = ({
           </button>
         </div>
       )}
-      <SearchBar handleSearch={handleSearch} />
-      <div className="pagination-container">
-        <button
-          className="page-button"
-          onClick={previousBulk}
-          disabled={currentIndex === 0}
-        >
-          Anterior
-        </button>
-        <div className="page-info">
-          Página: {currentIndex + 1} de {purchasesBulks.length}
-        </div>
-        <button
-          className="page-button"
-          onClick={nextBulk}
-          disabled={currentIndex === purchasesBulks.length - 1}
-        >
-          Siguiente
-        </button>
-      </div>
+
       {createProduct ? (
         <AddProductForm setCreateProduct={setCreateProduct} />
       ) : (
-        <div className="container-items">
-          {products.length > 0 ? (
-            purchasesBulks[currentIndex]?.map((product) => (
-              <ProductCards
-                key={products.id}
-                onAddProduct={onAddProduct}
-                product={product}
-                user={user}
-                handleProductClick={handleProductClick}
-              />
-            ))
-          ) : (
-            <div>No hay ningún producto para mostrar...</div>
-          )}
-        </div>
+        <>
+          <div className="pagination-container">
+            <button
+              className="page-button"
+              onClick={previousBulk}
+              disabled={currentIndex === 0}
+            >
+              Anterior
+            </button>
+            <div className="page-info">
+              Página: {currentIndex + 1} de {purchasesBulks.length}
+            </div>
+            <button
+              className="page-button"
+              onClick={nextBulk}
+              disabled={currentIndex === purchasesBulks.length - 1}
+            >
+              Siguiente
+            </button>
+          </div>
+          <SearchBar handleSearch={handleSearch} />
+          <div className="container-items">
+            {products.length > 0 ? (
+              purchasesBulks[currentIndex]?.map((product, index) => (
+                <ProductCards
+                  key={index}
+                  onAddProduct={onAddProduct}
+                  product={product}
+                  user={user}
+                  handleProductClick={handleProductClick}
+                />
+              ))
+            ) : (
+              <div>No hay ningún producto para mostrar...</div>
+            )}
+          </div>
+        </>
       )}
     </>
   );

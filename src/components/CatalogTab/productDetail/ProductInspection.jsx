@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { deleteProduct } from "../../../api/productsApi";
 import imgen from "../../../assets/imgs/noProductImage.png";
 import AddProductForm from "../../Forms/AddProductForm";
 import ConfirmationModal from "../../modals/ConfirmationModal";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductById } from "../../../Features/Products/ProductAction";
+import {
+  deleteProduct,
+  getProductById,
+} from "../../../Features/Products/ProductAction";
 import "./productInspection.css";
 import { getUserByJWT } from "../../../Features/User/UserAction";
 
@@ -35,11 +37,9 @@ export function ProductInspection({
         .unwrap()
         .then((result) => {
           localStorage.setItem("USER", JSON.stringify(result));
-          setFormData({ email: "", password: "" });
-          setConfirmation(true);
         })
         .catch((error) => {
-          console.error("Login failed:", error);
+          console.error("Product Inspector failed:", error);
         });
     };
     loadUser();
@@ -86,9 +86,16 @@ export function ProductInspection({
   };
 
   const handleConfirmAction = async () => {
-    const resp = await deleteProduct(product.id);
-    setIsOpen(false);
-    navigate("/catalogo");
+    dispatch(deleteProduct(product.id))
+      .unwrap()
+      .then((result) => {
+        console.log(result);
+        setIsOpen(false);
+        navigate("/catalogo");
+      })
+      .catch((error) => {
+        console.error("Product Inspector failed:", error);
+      });
   };
 
   const handleOpenModal = (actionDescription) => {
@@ -131,7 +138,7 @@ export function ProductInspection({
             <p>
               <strong>Precio: </strong>${product.price}
             </p>
-            {user.role === "COMPRADOR" ? (
+            {user?.role === "COMPRADOR" ? (
               <button
                 className="add-to-cart"
                 onClick={() => onAddProduct(product)}

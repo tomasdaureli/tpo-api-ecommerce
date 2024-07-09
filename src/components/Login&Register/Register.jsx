@@ -64,7 +64,7 @@ export function Register() {
         navigate("/", { replace: true });
       })
       .catch((error) => {
-        console.error("Login failed:", error);
+        console.error("Register failed:", error);
       });
   };
 

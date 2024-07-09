@@ -26,7 +26,7 @@ export function UserPnSList({ refreshProducts }) {
   }, [user]);
 
   useEffect(() => {
-    if (status === "succeeded" && user.role == "VENDEDOR") {
+    if (status === "succeeded" && user?.role == "VENDEDOR") {
       setProductsToShow(products);
     }
   }, [products, status]);
@@ -54,7 +54,7 @@ export function UserPnSList({ refreshProducts }) {
       ) : (
         <div className="container">
           <div className="userPurchases">
-            {user.role == "COMPRADOR" ? (
+            {user?.role == "COMPRADOR" ? (
               <p>Total de compras: {productsToShow.length}</p>
             ) : (
               <p>Total de productos: {productsToShow.length}</p>
@@ -79,22 +79,22 @@ export function UserPnSList({ refreshProducts }) {
               </button>
             </div>
             <div className="user-container-items">
-              {user.role == "COMPRADOR" ? (
+              {user?.role == "COMPRADOR" ? (
                 <>
-                  {purchasesBulks[currentIndex]?.map((product) => (
+                  {purchasesBulks[currentIndex]?.map((product, index) => (
                     <ProductBuyerCard
                       product={product}
-                      key={product.id}
+                      key={index}
                       refreshProducts={refreshProducts}
                     />
                   ))}
                 </>
               ) : (
                 <>
-                  {purchasesBulks[currentIndex]?.map((product) => (
+                  {purchasesBulks[currentIndex]?.map((product, index) => (
                     <ProductVendorCard
                       product={product}
-                      key={product.id}
+                      key={index}
                       refreshProducts={refreshProducts}
                     />
                   ))}
