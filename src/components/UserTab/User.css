@@ -43,8 +43,8 @@
   border: 1px black solid;
 }
 
-.userSales {
-  grid-area: userSales;
+.userCupons {
+  grid-area: userCupons;
   border: 1px black solid;
 }
 
@@ -55,38 +55,6 @@
   align-items: flex-start;
 }
 
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.page-button {
-  padding: 8px 16px;
-  margin: 0 10px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.page-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.page-button:hover:not(:disabled) {
-  background-color: #0056b3;
-}
-
-.page-info {
-  font-size: 16px;
-  color: #333;
-}
 
 .user-container-items {
   display: flex;
@@ -99,7 +67,6 @@
 .logoutButton {
   padding: 8px 16px;
   background-color: #f44336;
-  /* Rojo para el botón de logout */
   color: white;
   border: none;
   border-radius: 5px;
@@ -109,5 +76,21 @@
 
 .logoutButton:hover {
   background-color: #c33c29;
-  /* Un tono más oscuro al hacer hover */
+}
+
+/* ------------------ */
+.create-cupon-button {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  /* Verde */
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.create-cupon-button:hover {
+  background-color: #45a049;
 }

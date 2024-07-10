@@ -4,32 +4,45 @@ import { ProductBuyerCard } from "../Cards/productBuyerCard";
 import { ProductVendorCard } from "../Cards/productVendorCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductsBySeller } from "../../Features/Products/ProductAction";
+import Paginator from "../utils/Paginator/Paginator";
+import { getCoupons } from "../../Features/Coupons/CuponsAction";
+import CouponCard from "../Cards/cuponCard";
+import CreateCouponModal from "../modals/CouponModal/CreateCouponModal ";
 
 export function UserPnSList({ refreshProducts }) {
   const dispatch = useDispatch();
   const { products, status, error } = useSelector((state) => state.products);
+  const { coupons, couponsStatus, couponsError, couponsPatchStatus } =
+    useSelector((state) => state.coupons);
   const { user, buys } = useSelector((state) => state.user);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentProductIndex, setCurrentProductIndex] = useState(0);
+  const [currentCuponIndex, setCurrentCuponIndex] = useState(0);
   const [productsToShow, setProductsToShow] = useState({});
+
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
   const bulkSize = 4;
-  useEffect(() => {
-    const loadUser = async () => {
-      if (user?.role == "VENDEDOR") {
-        dispatch(getProductsBySeller(user.id));
-      }
-      if (user?.role == "COMPRADOR") {
-        setProductsToShow(buys);
-      }
-    };
-    loadUser();
-  }, [user]);
 
   useEffect(() => {
-    if (status === "succeeded" && user?.role == "VENDEDOR") {
-      setProductsToShow(products);
+    if (user?.role === "VENDEDOR") {
+      dispatch(getProductsBySeller(user.id))
+        .unwrap()
+        .then((products) => {
+          setProductsToShow(products);
+        });
+      dispatch(getCoupons());
     }
-  }, [products, status]);
+    if (user?.role === "COMPRADOR") {
+      setProductsToShow(buys);
+    }
+  }, [user?.id, user?.role, dispatch]);
+
+  const openCreateModal = () => setShowCreateModal(true);
+  const closeCreateModal = () => {
+    dispatch(getCoupons());
+    setShowCreateModal(false);
+  };
 
   const purchasesBulks = productsToShow
     ? Array.from(
@@ -37,71 +50,85 @@ export function UserPnSList({ refreshProducts }) {
         (_, i) => productsToShow.slice(i * bulkSize, i * bulkSize + bulkSize)
       )
     : [];
-
-  const previousBulk = () => {
-    setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
-  };
-
-  const nextBulk = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex < purchasesBulks.length - 1 ? prevIndex + 1 : prevIndex
-    );
-  };
+  const couponsBulks = coupons
+    ? Array.from({ length: Math.ceil(coupons.length / bulkSize) }, (_, i) =>
+        coupons.slice(i * bulkSize, i * bulkSize + bulkSize)
+      )
+    : [];
   return (
     <>
       {!user ? (
         <div>Cargando datos del usuario...</div>
       ) : (
-        <div className="container">
+        <div
+          className="container"
+          style={
+            user?.role === "VENDEDOR"
+              ? {
+                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateAreas: '"userPurchases userCupons"',
+                }
+              : {}
+          }
+        >
           <div className="userPurchases">
             {user?.role == "COMPRADOR" ? (
               <p>Total de compras: {productsToShow.length}</p>
             ) : (
               <p>Total de productos: {productsToShow.length}</p>
             )}
-            <div className="pagination-container">
-              <button
-                className="page-button"
-                onClick={previousBulk}
-                disabled={currentIndex === 0}
-              >
-                Anterior
-              </button>
-              <div className="page-info">
-                Página: {currentIndex + 1} de {purchasesBulks.length}
-              </div>
-              <button
-                className="page-button"
-                onClick={nextBulk}
-                disabled={currentIndex === purchasesBulks.length - 1}
-              >
-                Siguiente
-              </button>
-            </div>
+            <Paginator
+              currentIndex={currentProductIndex}
+              purchasesBulks={purchasesBulks}
+              setCurrentIndex={setCurrentProductIndex}
+            />
             <div className="user-container-items">
               {user?.role == "COMPRADOR" ? (
                 <>
-                  {purchasesBulks[currentIndex]?.map((product, index) => (
-                    <ProductBuyerCard
-                      product={product}
-                      key={index}
-                      refreshProducts={refreshProducts}
-                    />
-                  ))}
+                  {purchasesBulks[currentProductIndex]?.map(
+                    (product, index) => (
+                      <ProductBuyerCard
+                        product={product}
+                        key={index}
+                        refreshProducts={refreshProducts}
+                      />
+                    )
+                  )}
                 </>
               ) : (
                 <>
-                  {purchasesBulks[currentIndex]?.map((product, index) => (
-                    <ProductVendorCard
-                      product={product}
-                      key={index}
-                      refreshProducts={refreshProducts}
-                    />
-                  ))}
+                  {purchasesBulks[currentProductIndex]?.map(
+                    (product, index) => (
+                      <ProductVendorCard
+                        product={product}
+                        key={index}
+                        refreshProducts={refreshProducts}
+                      />
+                    )
+                  )}
                 </>
               )}
             </div>
           </div>
+          {user?.role === "VENDEDOR" && (
+            <div className="userCupons">
+              <p>Cupones: {user?.sales?.length}</p>
+              <button className="create-cupon-button" onClick={openCreateModal}>
+                Crear Cupón
+              </button>
+              {showCreateModal && (
+                <CreateCouponModal onClose={closeCreateModal} />
+              )}
+              <Paginator
+                currentIndex={currentCuponIndex}
+                purchasesBulks={couponsBulks}
+                setCurrentIndex={setCurrentCuponIndex}
+              />
+              {couponsBulks[currentCuponIndex]?.map((coupon, index) => (
+                <CouponCard key={index} coupon={coupon} />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </>

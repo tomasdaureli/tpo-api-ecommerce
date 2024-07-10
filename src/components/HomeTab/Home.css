@@ -1,65 +1,58 @@
-/* Sección de colección */
-.zapatillas {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between; 
-}
-
-.zapatilla {
-    width: calc(30% - 20px); 
-    margin-bottom: 20px; 
-}
-
-.zapatilla img {
+.home-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .home-title, .featured-products h2, .customer-reviews h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .product-grid, .review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .product {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .product img {
     width: 100%;
     height: auto;
-}
-
-.zapatilla h3 {
-    margin-top: 10px;
-}
-
-.zapatilla p {
-    margin-bottom: 5px;
-}
-
-
-
-/*opiniones */
-.opinion {
+  }
+  
+  .review {
     display: flex;
-    align-items: center; 
-    margin-bottom: 7; 
-    width: 50%; 
-}
-.opiniones-container {
-    margin-top: 20px; 
-}
-
-.avatar {
-    width: 80px;
-    height: 80px;
-    margin-right: 10px; 
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .avatar img {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    overflow: hidden;
-}
-
-.avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.details {
-    flex: 1;
-}
-
-.rating {
+    margin-right: 10px;
+  }
+  
+  .details .rating {
     color: gold;
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.star {
-    mar
-}
+  }
+  
+  .details .comment {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .star {
+    color: #ffa534; /* Gold color for stars */
+  }
+  

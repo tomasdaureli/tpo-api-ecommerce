@@ -22,7 +22,7 @@ export function ProductBuyerCard({ product, refreshProducts }) {
     <div className="userItem">
       Productos:
       <div className="productSpans">
-        {product.items.map((p, index) => (
+        {product?.items?.map((p, index) => (
           <span key={index}>
             {p.nameProduct} - Cantidad: {p.quantity}
           </span>

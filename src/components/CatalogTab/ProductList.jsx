@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./productList.css";
 import AddProductForm from "../Forms/AddProductForm";
 import { ProductCards } from "./productCards";
-import SearchBar from "../utils/SearchBar";
+import SearchBar from "../utils/Searchbar/SearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProducts,

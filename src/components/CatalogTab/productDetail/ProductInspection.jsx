@@ -10,6 +10,7 @@ import {
 } from "../../../Features/Products/ProductAction";
 import "./productInspection.css";
 import { getUserByJWT } from "../../../Features/User/UserAction";
+import Swal from "sweetalert2";
 
 export function ProductInspection({
   allProducts,
@@ -26,8 +27,6 @@ export function ProductInspection({
   const navigate = useNavigate();
   const [createProduct, setCreateProduct] = useState(false);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [action, setAction] = useState("");
   const [img, setImg] = useState([]);
 
   useEffect(() => {
@@ -85,25 +84,41 @@ export function ProductInspection({
     setCreateProduct(!createProduct);
   };
 
-  const handleConfirmAction = async () => {
-    dispatch(deleteProduct(product.id))
-      .unwrap()
-      .then((result) => {
-        console.log(result);
-        setIsOpen(false);
-        navigate("/catalogo");
-      })
-      .catch((error) => {
-        console.error("Product Inspector failed:", error);
-      });
-  };
-
-  const handleOpenModal = (actionDescription) => {
-    setAction(actionDescription);
-    setIsOpen(true);
-  };
-  const handleCloseModal = () => {
-    setIsOpen(false);
+  const handleOpenModal = () => {
+    Swal.fire({
+      title: "¿Está seguro que desea eliminar este producto?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showDenyButton: true,
+      confirmButtonColor: "#d33",
+      denyButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      denyButtonText: "No, cancelar",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteProduct(product.id))
+          .unwrap()
+          .then(() => {
+            Swal.fire({
+              title: "Eliminado!",
+              text: "Navegando al catálogo.",
+              icon: "success",
+              timer: 1500,
+              timerProgressBar: true,
+              // didClose: () => navigate("/catalogo"),
+            });
+          })
+          .catch((error) => {
+            console.error("Product deletion failed:", error);
+            Swal.fire({
+              title: "Error",
+              text: "No se pudo eliminar el producto.",
+              icon: "error",
+            });
+          });
+      }
+    });
   };
 
   if (!product) {
@@ -152,11 +167,7 @@ export function ProductInspection({
                 </button>
                 <button
                   className="add-to-cart delete"
-                  onClick={() =>
-                    handleOpenModal(
-                      "¿Está seguro que desea eliminar este producto?"
-                    )
-                  }
+                  onClick={() => handleOpenModal()}
                 >
                   Eliminar producto
                 </button>
@@ -170,12 +181,7 @@ export function ProductInspection({
           <p className="description-text">{product.description}</p>
         </div>
       )}
-      <ConfirmationModal
-        isOpen={isOpen}
-        onClose={handleCloseModal}
-        onConfirm={handleConfirmAction}
-        action={action}
-      />
+
       {createProduct && (
         <AddProductForm
           setCreateProduct={setCreateProduct}

@@ -10,27 +10,22 @@ import { getUserByJWT } from "../../Features/User/UserAction";
 export function User() {
   const dispatch = useDispatch();
   const { user, status, error } = useSelector((state) => state.user);
-  const [confirmationChange, setConfirmationChange] = useState(false);
 
   let navigate = useNavigate();
 
   useEffect(() => {
-    const loadUser = async () => {
-      dispatch(getUserByJWT())
-        .unwrap()
-        .then((result) => {
-          localStorage.setItem("USER", JSON.stringify(result));
-        })
-        .catch((error) => {
-          console.error("Get user by jwt failed:", error);
-        });
-    };
-
-    loadUser();
-  }, [confirmationChange]);
+    dispatch(getUserByJWT())
+      .unwrap()
+      .then((result) => {
+        localStorage.setItem("USER", JSON.stringify(result));
+      })
+      .catch((error) => {
+        console.error("Get user by jwt failed:", error);
+      });
+  }, []);
 
   const refreshProducts = () => {
-    setConfirmationChange((prev) => !prev);
+    dispatch(getUserByJWT());
   };
 
   function LogOut() {
