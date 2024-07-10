@@ -1,18 +1,22 @@
 .container-items {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    /* Reduce el tamaño mínimo de las tarjetas */
+    gap: 10px;
+    /* Ajusta el espacio entre las tarjetas si es necesario */
+    padding: 10px;
+    /* Reduce el padding si es necesario */
     background-color: #f9f9f9;
 }
 
 .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     border: 1px solid #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 15px;
+    padding: 10px;
     border-radius: 8px;
-    width: 80%;
     transition: transform 0.3s;
     cursor: pointer;
 }
@@ -21,65 +25,46 @@
     transform: translateY(-5px);
 }
 
-.item figure {
-    margin: 0;
-    cursor: pointer;
-}
-
 .item img {
     width: 100%;
-    height: auto;
+    /* Esto mantendrá la imagen ajustada al tamaño del contenedor */
+    height: 120px;
+    /* Reduce la altura de las imágenes para hacer las tarjetas más compactas */
+    object-fit: cover;
+    /* Asegura que las imágenes se ajusten bien sin deformarse */
     border-radius: 4px;
 }
 
 .info-product {
     text-align: center;
+    padding: 5px 0;
+    /* Reduce el padding para ahorrar espacio */
 }
 
 .info-product h2 {
-    color: #333;
-    font-size: 1.2rem;
-    margin-top: 10px;
+    font-size: 0.9rem;
+    /* Reduce el tamaño de la fuente para el título del producto */
+    margin-top: 5px;
 }
 
 .info-product .price {
+    font-size: 0.85rem;
+    /* Reduce el tamaño de la fuente para el precio */
     color: #666;
-    font-size: 1.1rem;
-    margin: 5px 0;
+    font-weight: bold;
+    /* Hacer el precio más notable */
 }
 
 .item button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    padding: 8px 16px;
+    /* Ajusta el padding del botón para que sea proporcional al tamaño más pequeño */
+    font-size: 0.8rem;
+    /* Reduce el tamaño de la fuente del botón */
 }
-
-.item button:hover {
-    background-color: #0056b3;
-}
-
-.no-products {
-    text-align: center;
-    font-size: 1rem;
-    color: #888;
-}
-
 
 .create-button {
-    width: 15%;
-    margin: 1rem auto;
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    background-color: #5cb85c;
-}
-
-.create-button:hover {
-    background-color: #4cae4c;
+    padding: 10px 20px;
+    /* Ajusta estos valores si el botón de crear producto parece demasiado grande o pequeño */
+    font-size: 0.9rem;
+    /* Ajusta el tamaño de la fuente si es necesario */
 }

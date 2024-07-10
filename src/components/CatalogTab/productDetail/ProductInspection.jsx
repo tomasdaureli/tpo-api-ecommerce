@@ -27,7 +27,7 @@ export function ProductInspection({
   const navigate = useNavigate();
   const [createProduct, setCreateProduct] = useState(false);
 
-  const [img, setImg] = useState([]);
+  const [img, setImg] = useState("");
 
   useEffect(() => {
     dispatch(getProductById(formattedProductId));
@@ -45,22 +45,14 @@ export function ProductInspection({
   }, [createProduct]);
 
   useEffect(() => {
-    const loadProduct = async () => {
-      try {
-        const response = await fetch(product.urlImage);
-        if (response.ok) {
-          setImg(product.urlImage);
-        } else {
-          setImg(imgen);
-        }
-      } catch (error) {
-        console.log(error);
-        setImg(imgen);
-      }
-    };
+    setImg(product.urlImage || imgen);
+  }, [product.urlImage]);
 
-    loadProduct();
-  }, [dispatch, product]);
+  const handleError = () => {
+    if (img !== imgen) {
+      setImg(imgen);
+    }
+  };
 
   const formattedProductId = parseInt(productId, 10);
 
@@ -146,7 +138,7 @@ export function ProductInspection({
             </svg>
           </div>
           <div className="img-product-detail">
-            <img src={img} alt={product.productName} />
+            <img src={img} alt={product.productName} onError={handleError} />
           </div>
           <div className="text-product-detail">
             <h1>{product.productName}</h1>

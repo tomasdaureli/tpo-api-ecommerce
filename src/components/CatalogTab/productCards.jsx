@@ -12,21 +12,14 @@ export const ProductCards = ({
   const [img, setImg] = useState([]);
 
   useEffect(() => {
-    const loadCatalog = async () => {
-      try {
-        const response = await fetch(product.urlImage);
-        if (response.ok) {
-          setImg(product.urlImage);
-        } else {
-          setImg(imgen);
-        }
-      } catch (error) {
-        setImg(imgen);
-      }
-    };
-    loadCatalog();
-  }, [product]);
+    setImg(product.urlImage || imgen);
+  }, [product.urlImage]);
 
+  const handleError = () => {
+    if (img !== imgen) {
+      setImg(imgen);
+    }
+  };
   return (
     <>
       <div className="item" key={product.id}>
@@ -34,6 +27,7 @@ export const ProductCards = ({
           <img
             src={img}
             alt={product.productName}
+            onError={handleError}
             onClick={() => handleProductClick(product.id)}
           />
         </figure>

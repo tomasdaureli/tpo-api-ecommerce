@@ -26,7 +26,7 @@ export const ProductList = ({
   const [user, setUser] = useState({});
   const [createProduct, setCreateProduct] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const bulkSize = 3;
+  const bulkSize = 4;
 
   const navigate = useNavigate();
 
@@ -137,7 +137,12 @@ export const ProductList = ({
             </button>
           </div>
           <SearchBar handleSearch={handleSearch} />
-          <div className="container-items">
+          <div
+            className="container-items"
+            style={{
+              gridTemplateColumns: `repeat(${bulkSize}, minmax(180px, 1fr))`,
+            }}
+          >
             {products.length > 0 ? (
               purchasesBulks[currentIndex]?.map((product, index) => (
                 <ProductCards
