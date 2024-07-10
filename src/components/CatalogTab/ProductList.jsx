@@ -87,6 +87,7 @@ export const ProductList = ({
   const handleSearch = async (e) => {
     dispatch(
       getProductsByParameters({
+        nombre: e.name,
         category: e.category,
         subcategory: e.subcategory,
       })

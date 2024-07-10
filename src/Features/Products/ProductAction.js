@@ -28,11 +28,12 @@ export const getProducts = createAsyncThunk(
 
 export const getProductsByParameters = createAsyncThunk(
   "products/GetProductsByParameter",
-  async ({ category, subcategory }, { rejectWithValue }) => {
+  async ({ nombre, category, subcategory }, { rejectWithValue }) => {
     const token = localStorage.getItem("access_token");
     let url = `${BASE_URL}/products`;
 
     const params = new URLSearchParams();
+    if (nombre) params.append("productName", nombre);
     if (category) params.append("category", category);
     if (subcategory) params.append("subcategory", subcategory);
     url += `?${params.toString()}`;
