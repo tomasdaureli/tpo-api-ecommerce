@@ -15,24 +15,14 @@ import { Checkout } from "./components/BuyTab/Checkout";
 import Buy from "./components/BuyTab/Buy";
 
 function App() {
-  const [allProducts, setAllProducts] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [countProducts, setCountProducts] = useState(0);
   const [user, setUser] = useState({});
-
+  const [addedProduct, setAddedProduct] = useState();
   return (
     <>
       {!localStorage.getItem("USER") ? (
         ""
       ) : (
-        <Header
-          allProducts={allProducts}
-          setAllProducts={setAllProducts}
-          total={total}
-          setTotal={setTotal}
-          countProducts={countProducts}
-          setCountProducts={setCountProducts}
-        />
+        <Header addedProduct={addedProduct} setAddedProduct={setAddedProduct} />
       )}
       <div>
         <Routes>
@@ -44,12 +34,8 @@ function App() {
               index
               element={
                 <Catalog
-                  allProducts={allProducts}
-                  setAllProducts={setAllProducts}
-                  total={total}
-                  setTotal={setTotal}
-                  countProducts={countProducts}
-                  setCountProducts={setCountProducts}
+                  addedProduct={addedProduct}
+                  setAddedProduct={setAddedProduct}
                 />
               }
             />
@@ -57,12 +43,8 @@ function App() {
               path=":productId"
               element={
                 <ProductInspection
-                  allProducts={allProducts}
-                  setAllProducts={setAllProducts}
-                  total={total}
-                  setTotal={setTotal}
-                  countProducts={countProducts}
-                  setCountProducts={setCountProducts}
+                  addedProduct={addedProduct}
+                  setAddedProduct={setAddedProduct}
                 />
               }
             />
@@ -71,18 +53,7 @@ function App() {
             path="/user"
             element={<User user={user} setUser={setUser} />}
           />
-          <Route
-            path="/buy/checkout"
-            element={
-              <Checkout
-                allProducts={allProducts}
-                setAllProducts={setAllProducts}
-                total={total}
-                setTotal={setTotal}
-                setCountProducts={setCountProducts}
-              />
-            }
-          />
+          <Route path="/buy/checkout" element={<Checkout />} />
           <Route path="/buy/success" element={<Buy />} />
         </Routes>
       </div>

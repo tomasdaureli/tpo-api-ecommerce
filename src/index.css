@@ -78,6 +78,7 @@ header {
     display: flex;
     justify-content: space-between;
     flex: 0.8;
+    align-items: center;
 }
 
 .titulo-producto-carrito {
@@ -93,6 +94,7 @@ header {
 .cantidad-producto-carrito {
     font-weight: 400;
     font-size: 20px;
+    text-align: center;
 }
 
 .icon-close {

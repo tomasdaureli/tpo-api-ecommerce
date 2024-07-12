@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { postCupons } from "../../../Features/Coupons/CuponsAction";
-import Swal from "sweetalert2";
 import "./CreateCouponModal.css";
 import Alert from "../../utils/SweetAlerts2/Alert";
 
@@ -61,8 +60,10 @@ const CreateCouponModal = ({ onClose }) => {
               onChange={(e) => setExpiryDate(e.target.value)}
             />
           </label>
-          <button type="submit">Crear Cupón</button>
-          <button type="button" onClick={onClose}>
+          <button type="submit" className="couponModalButton">
+            Crear Cupón
+          </button>
+          <button type="button" className="couponModalButton" onClick={onClose}>
             Cancelar
           </button>
         </form>

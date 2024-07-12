@@ -1,19 +1,16 @@
 .container-product-detail {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-template-areas:
-        "image details"
-        "description description";
-    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
     max-width: 1200px;
     margin: 40px auto;
     padding: 20px;
     background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
 }
 
 .img-product-detail {
-    grid-area: image;
+    flex: 1 1 40%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,11 +21,12 @@
     width: 100%;
     max-width: 400px;
     height: auto;
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .text-product-detail {
-    grid-area: details;
+    flex: 1 1 60%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -37,13 +35,15 @@
 }
 
 .text-product-detail h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #333;
 }
 
 .text-product-detail p {
     font-size: 18px;
-    margin: 5px 0;
+    margin: 10px 0;
+    color: #555;
 }
 
 .add-to-cart {
@@ -51,9 +51,10 @@
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 12px 25px;
     cursor: pointer;
     margin-top: 20px;
+    transition: background-color 0.3s ease;
 }
 
 .add-to-cart:hover {
@@ -66,16 +67,16 @@
 
 .delete:hover {
     background-color: #ef2c2c;
-
 }
 
 .description {
-    grid-area: description;
+    width: 100%;
     font-size: 16px;
     line-height: 1.6;
-    margin-top: 20px;
+    margin-top: 30px;
     padding: 20px;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #eee;
+    color: #666;
 }
 
 .button-back {
@@ -94,4 +95,40 @@
 
 .button-back:hover {
     background-color: #f8f8f8;
+}
+
+.product-details {
+    width: 100%;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 25px;
+    margin: 30px 0;
+}
+
+.product-description,
+.product-category,
+.product-subcategory {
+    margin-bottom: 20px;
+}
+
+.product-description h2 {
+    margin-bottom: 12px;
+    font-size: 26px;
+    color: #333;
+}
+
+.product-category h3,
+.product-subcategory h3 {
+    margin-bottom: 8px;
+    font-size: 22px;
+    color: #777;
+}
+
+.product-description p,
+.product-category p,
+.product-subcategory p {
+    margin: 0;
+    font-size: 18px;
+    color: #555;
 }

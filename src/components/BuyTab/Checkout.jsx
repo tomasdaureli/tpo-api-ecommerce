@@ -1,23 +1,30 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Checkout.css";
 import { useDispatch, useSelector } from "react-redux";
-import { postUserPurchase } from "../../Features/User/UserAction";
+import { getUserByJWT, postUserPurchase } from "../../Features/User/UserAction";
+import Alert from "../utils/SweetAlerts2/Alert";
+import defaultImage from "../../assets/imgs/noProductImage.png";
 
-export function Checkout({
-  allProducts,
-  setAllProducts,
-  total,
-  setTotal,
-  count,
-  setCountProducts,
-}) {
+export function Checkout({}) {
   const dispatch = useDispatch();
   const { user, status, error } = useSelector((state) => state.user);
   const [discountCode, setDiscountCode] = useState(false);
-
+  const [cart, setCart] = useState({
+    products: [],
+    countProducts: 0,
+    total: 0,
+  });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(getUserByJWT());
+    const cart = JSON.parse(localStorage.getItem("CART"));
+    if (cart) {
+      console.log(cart);
+      setCart(cart);
+    }
+  }, []);
 
   const handlePurchase = async (purchase) => {
     const productsToSend = purchase.map((product) => ({
@@ -29,11 +36,26 @@ export function Checkout({
     )
       .unwrap()
       .then((result) => {
-        console.log(result);
-        setAllProducts([]);
-        setTotal(0);
-        setCountProducts(0);
-        navigate("/buy/success");
+        setCart({
+          products: [],
+          countProducts: 0,
+          total: 0,
+        });
+        localStorage.setItem(
+          "CART",
+          JSON.stringify({
+            products: [],
+            countProducts: 0,
+            total: 0,
+          })
+        );
+        Alert(
+          "success",
+          "Gracias por comprar con nosotros!",
+          "center",
+          "validationMessage"
+        );
+        navigate("/catalogo");
       })
       .catch((error) => {
         console.error("Checkout failed:", error);
@@ -45,64 +67,52 @@ export function Checkout({
   };
 
   return (
-    <>
-      <div className="button-back" onClick={() => navigate("/catalogo")}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="icon-cart"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
-        <label> Volver al catalogo</label>
+    <div className="checkout-wrapper">
+      <div className="checkout-header">
+        <button className="back-button" onClick={() => navigate("/catalogo")}>
+          Volver al catálogo
+        </button>
+        <p>Usuario registrado como: {user?.email}</p>
       </div>
-      <p>
-        <strong>Usuario registrado como </strong>
-        {user.email}
-      </p>
-      <div className="direccion-container">
-        <h2>Direccion para el envío</h2>
-        <label>Provincia </label>
-        <input type="text" placeholder="Provincia" />
-        <label>Localidad </label>
-        <input type="text" placeholder="Localidad" />
-        <label>Calle y número </label>
-        <input type="text" placeholder="Calle y número" />
+      <div className="checkout-body">
+        <div className="checkout-info">
+          <h2>Dirección para el envío</h2>
+          <input type="text" placeholder="Provincia" />
+          <input type="text" placeholder="Localidad" />
+          <input type="text" placeholder="Calle y número" />
+        </div>
+        <div className="checkout-products">
+          <ul className="product-list">
+            {cart?.products?.map((product) => (
+              <li key={product.id} className="product-item">
+                <img
+                  src={product.urlImage}
+                  alt={product.nameProduct}
+                  onError={(e) => (e.target.src = defaultImage)}
+                />
+                <div className="product-details">
+                  <p>{product.nameProduct}</p>
+                  <p>Cantidad: {product.quantity}</p>
+                  <p>Precio: ${product.price}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="discount-code">
+            <label>Código de descuento:</label>
+            <input type="text" onChange={handleChangeDiscountCode} />
+          </div>
+          <div className="checkout-total">
+            <p>Total de la compra: ${cart.total}</p>
+            <button
+              className="confirm-button"
+              onClick={() => handlePurchase(cart.products)}
+            >
+              Confirmar compra
+            </button>
+          </div>
+        </div>
       </div>
-      <div className="products-container">
-        <ul>
-          {allProducts.map((product) => (
-            <li key={product.id}>
-              <div className="product-container">
-                <img src={product.urlImage} alt={product.nameProduct} />
-                <p>{product.nameProduct}</p>
-                <p>Cantidad: {product.quantity}</p>
-                <p>Precio: ${product.price}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <input
-        type="number"
-        name="discountCode"
-        id="discountCode"
-        onChange={handleChangeDiscountCode}
-      />
-      <h1>Total de la compra: ${total}</h1>
-      <button
-        className="confirm-button"
-        onClick={() => handlePurchase(allProducts)}
-      >
-        Confirmar compra
-      </button>
-    </>
+    </div>
   );
 }

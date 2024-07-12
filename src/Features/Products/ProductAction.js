@@ -28,7 +28,10 @@ export const getProducts = createAsyncThunk(
 
 export const getProductsByParameters = createAsyncThunk(
   "products/GetProductsByParameter",
-  async ({ nombre, category, subcategory }, { rejectWithValue }) => {
+  async (
+    { nombre, category, subcategory, sortPriceAsc },
+    { rejectWithValue }
+  ) => {
     const token = localStorage.getItem("access_token");
     let url = `${BASE_URL}/products`;
 
@@ -36,6 +39,8 @@ export const getProductsByParameters = createAsyncThunk(
     if (nombre) params.append("productName", nombre);
     if (category) params.append("category", category);
     if (subcategory) params.append("subcategory", subcategory);
+    if (sortPriceAsc)
+      params.append("sortPriceAsc", sortPriceAsc == "asc" ? true : false);
     url += `?${params.toString()}`;
 
     try {
@@ -60,14 +65,23 @@ export const getProductsByParameters = createAsyncThunk(
 
 export const getProductsBySeller = createAsyncThunk(
   "products/GetProductsBySeller",
-  async (sellerId, { getState, rejectWithValue }) => {
+  async (
+    { sellerId, nombre, category, subcategory, actives },
+    { rejectWithValue }
+  ) => {
     const token = localStorage.getItem("access_token");
-    if (!token) {
-      return rejectWithValue("No se encontró token de autenticación");
-    }
+
+    let url = `${BASE_URL}/products/sellers/${sellerId}`;
+
+    const params = new URLSearchParams();
+    if (nombre) params.append("productName", nombre);
+    if (category) params.append("category", category);
+    if (subcategory) params.append("subcategory", subcategory);
+    if (actives) params.append("actives", actives == "active" ? true : false);
+    url += `?${params.toString()}`;
 
     try {
-      const response = await fetch(`${BASE_URL}/products/sellers/${sellerId}`, {
+      const response = await fetch(url, {
         // Uso correcto de `sellerId`
         method: "GET",
         headers: {

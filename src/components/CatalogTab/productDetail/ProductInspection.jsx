@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import imgen from "../../../assets/imgs/noProductImage.png";
 import AddProductForm from "../../Forms/AddProductForm";
-import ConfirmationModal from "../../modals/ConfirmationModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteProduct,
@@ -11,23 +10,30 @@ import {
 import "./productInspection.css";
 import { getUserByJWT } from "../../../Features/User/UserAction";
 import Swal from "sweetalert2";
+import Alert from "../../utils/SweetAlerts2/Alert";
 
-export function ProductInspection({
-  allProducts,
-  setAllProducts,
-  countProducts,
-  setCountProducts,
-  total,
-  setTotal,
-}) {
+export function ProductInspection({ addedProduct, setAddedProduct }) {
   const dispatch = useDispatch();
   const { product, status, error } = useSelector((state) => state.products);
   const { user } = useSelector((state) => state.user);
   const { productId } = useParams();
-  const navigate = useNavigate();
   const [createProduct, setCreateProduct] = useState(false);
-
+  const [cart, setCart] = useState({
+    products: [],
+    countProducts: 0,
+    total: 0,
+  });
   const [img, setImg] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(getUserByJWT());
+    const cart = JSON.parse(localStorage.getItem("CART"));
+    if (cart) {
+      console.log(cart);
+      setCart(cart);
+    }
+  }, []);
 
   useEffect(() => {
     dispatch(getProductById(formattedProductId));
@@ -57,19 +63,42 @@ export function ProductInspection({
   const formattedProductId = parseInt(productId, 10);
 
   const onAddProduct = (product) => {
-    const existingProduct = allProducts.find((item) => item.id === product.id);
+    const existingProduct = cart.products.find(
+      (item) => item.id === product.id
+    );
 
     if (existingProduct) {
-      const updatedProducts = allProducts.map((item) =>
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-      setAllProducts(updatedProducts);
+      if (existingProduct.quantity + 1 > product.stock) {
+        Alert(
+          "warning",
+          "Este producto no tiene mas stock, no podras agregar mas de lo que tienes en tu carrito.",
+          "center"
+        );
+        return;
+      } else {
+        cart.products = cart.products.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
     } else {
-      setAllProducts([...allProducts, { ...product, quantity: 1 }]);
+      if (product.stock < 1) {
+        Alert(
+          "error",
+          "El producto seleccionado no tiene stock, disculpa las molestias",
+          "center"
+        );
+      } else {
+        cart.products.push({ ...product, quantity: 1 });
+      }
     }
 
-    setCountProducts(countProducts + 1);
-    setTotal(total + product.price);
+    cart.countProducts = cart.countProducts + 1;
+    cart.total = cart.total + product.price;
+
+    localStorage.setItem("CART", JSON.stringify(cart));
+    setAddedProduct(!addedProduct);
   };
 
   const handdleProductUpdate = () => {
@@ -98,7 +127,7 @@ export function ProductInspection({
               icon: "success",
               timer: 1500,
               timerProgressBar: true,
-              // didClose: () => navigate("/catalogo"),
+              didClose: () => navigate("/catalogo"),
             });
           })
           .catch((error) => {
@@ -166,11 +195,22 @@ export function ProductInspection({
               </>
             )}
           </div>
-          <p className="description">
-            <strong>Descripción: </strong>
-            <br />
-          </p>
-          <p className="description-text">{product.description}</p>
+          <div class="product-details">
+            <div class="product-description">
+              <h2>Descripción</h2>
+              <p>{product.description}</p>
+            </div>
+
+            <div class="product-category">
+              <h3>Categoría</h3>
+              <p>{product.category}</p>
+            </div>
+
+            <div class="product-subcategory">
+              <h3>Subcategoría</h3>
+              <p>{product.subcategory}</p>
+            </div>
+          </div>
         </div>
       )}
 

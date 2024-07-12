@@ -11,39 +11,49 @@ import {
   getProductsByParameters,
   getProductsBySeller,
 } from "../../Features/Products/ProductAction";
+import { getUserByJWT } from "../../Features/User/UserAction";
+import Alert from "../utils/SweetAlerts2/Alert";
 
-export const ProductList = ({
-  allProducts,
-  setAllProducts,
-  countProducts,
-  setCountProducts,
-  total,
-  setTotal,
-}) => {
+export const ProductList = ({ addedProduct, setAddedProduct }) => {
   const dispatch = useDispatch();
   const { products, status, error } = useSelector((state) => state.products);
+  const { user } = useSelector((state) => state.user);
   const [purchasesBulks, setPurchasesBulks] = useState([]);
-  const [user, setUser] = useState({});
   const [createProduct, setCreateProduct] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [cart, setCart] = useState({
+    products: [],
+    countProducts: 0,
+    total: 0,
+  });
   const bulkSize = 4;
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadCatalog = async () => {
-      let userLogged = JSON.parse(localStorage.getItem("USER"));
-      if (userLogged) {
-        setUser(userLogged);
-      }
-      if (userLogged.role == "VENDEDOR") {
-        dispatch(getProductsBySeller(userLogged.id));
-      } else {
-        dispatch(getProducts());
-      }
-    };
-    loadCatalog();
-  }, [createProduct]);
+    dispatch(getUserByJWT());
+    const cart = JSON.parse(localStorage.getItem("CART"));
+    if (cart) {
+      setCart(cart);
+      setAddedProduct(!addedProduct);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user?.role == "VENDEDOR") {
+      dispatch(
+        getProductsBySeller({
+          sellerId: user.id,
+          nombre: null,
+          category: null,
+          subcategory: null,
+          actives: null,
+        })
+      );
+    }
+    if (user?.role == "COMPRADOR") {
+      dispatch(getProducts());
+    }
+  }, [createProduct, user?.role]);
 
   useEffect(() => {
     setPurchasesBulks(
@@ -55,19 +65,45 @@ export const ProductList = ({
         : []
     );
   }, [products]);
+
   const onAddProduct = (product) => {
-    const existingProduct = allProducts.find((item) => item.id === product.id);
+    const existingProduct = cart.products.find(
+      (item) => item.id === product.id
+    );
 
     if (existingProduct) {
-      const updatedProducts = allProducts.map((item) =>
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-      setAllProducts(updatedProducts);
+      if (existingProduct.quantity + 1 > product.stock) {
+        Alert(
+          "warning",
+          "Este producto no tiene mas stock, no podras agregar mas de lo que tienes en tu carrito.",
+          "center"
+        );
+        return;
+      } else {
+        cart.products = cart.products.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
     } else {
-      setAllProducts([...allProducts, { ...product, quantity: 1 }]);
+      if (product.stock < 1) {
+        Alert(
+          "error",
+          "El producto seleccionado no tiene stock, disculpa las molestias",
+          "center"
+        );
+        return;
+      } else {
+        cart.products.push({ ...product, quantity: 1 });
+      }
     }
-    setCountProducts(countProducts + 1);
-    setTotal(total + product.price);
+
+    cart.countProducts = cart.countProducts + 1;
+    cart.total = cart.total + product.price;
+
+    localStorage.setItem("CART", JSON.stringify(cart));
+    setAddedProduct(!addedProduct);
   };
 
   const handleProductClick = (productId) => {
@@ -85,24 +121,45 @@ export const ProductList = ({
   };
 
   const handleSearch = async (e) => {
-    dispatch(
-      getProductsByParameters({
-        nombre: e.name,
-        category: e.category,
-        subcategory: e.subcategory,
-      })
-    )
-      .unwrap()
-      .then((result) => {
-        setCurrentIndex(0);
-      })
-      .catch((error) => {
-        console.error("Failed:", error);
-      });
+    if (user?.role == "VENDEDOR") {
+      dispatch(
+        getProductsBySeller({
+          sellerId: user.id,
+          nombre: e.name,
+          category: e.category,
+          subcategory: e.subcategory,
+          actives: e.activeStatus,
+        })
+      )
+        .unwrap()
+        .then((result) => {
+          setCurrentIndex(0);
+        })
+        .catch((error) => {
+          console.error("Failed:", error);
+        });
+    }
+    if (user?.role == "COMPRADOR") {
+      dispatch(
+        getProductsByParameters({
+          nombre: e.name,
+          category: e.category,
+          subcategory: e.subcategory,
+          sortPriceAsc: e.sortPrice,
+        })
+      )
+        .unwrap()
+        .then((result) => {
+          setCurrentIndex(0);
+        })
+        .catch((error) => {
+          console.error("Failed:", error);
+        });
+    }
   };
   return (
     <>
-      {user.role === "VENDEDOR" && !createProduct && (
+      {user?.role === "VENDEDOR" && !createProduct && (
         <div>
           <h1>Tus Productos</h1>
           <button

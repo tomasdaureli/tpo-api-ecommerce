@@ -3,9 +3,9 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
-const Alert = (icon, title) => {
+const Alert = (icon, title, position = "top-end", popup = "custom-popup") => {
   MySwal.fire({
-    position: "top-end",
+    position,
     icon,
     title,
     toast: true,
@@ -16,7 +16,7 @@ const Alert = (icon, title) => {
     color: "#333",
     iconColor: "rgb(48, 133, 214)",
     customClass: {
-      popup: "custom-popup",
+      popup,
       title: "custom-title",
     },
     didOpen: (toast) => {

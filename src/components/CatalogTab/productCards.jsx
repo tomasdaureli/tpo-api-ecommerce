@@ -34,7 +34,7 @@ export const ProductCards = ({
         <div className="info-product">
           <h2>{product.productName}</h2>
           <p className="price">${product.price}</p>
-          {user.role === "COMPRADOR" && (
+          {user?.role === "COMPRADOR" && (
             <button onClick={() => onAddProduct(product)}>
               Añadir al carrito
             </button>

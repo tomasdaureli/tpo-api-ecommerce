@@ -1,11 +1,16 @@
+import { useSelector } from "react-redux";
 import "./SearchBar.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function SearchBar({ handleSearch }) {
+  const { user, status, error } = useSelector((state) => state.user);
+  const [filterChanged, setFilterChanged] = useState(false);
   const [searchParams, setSearchParams] = useState({
     name: "",
     category: "",
     subcategory: "",
+    sortPrice: "",
+    activeStatus: "",
   });
 
   const handleChange = (value, field) => {
@@ -13,6 +18,27 @@ function SearchBar({ handleSearch }) {
       ...prevParams,
       [field]: value,
     }));
+    setFilterChanged(true);
+  };
+
+  const handleClearFilter = async () => {
+    if (!searchParams) {
+      return;
+    }
+    const resetParams = {
+      name: "",
+      category: "",
+      subcategory: "",
+      sortPrice: "",
+      activeStatus: "",
+    };
+    setSearchParams(resetParams);
+    setFilterChanged(false);
+    handleSearch(resetParams);
+  };
+
+  const isFilterActive = () => {
+    return Object.values(searchParams).some((x) => x !== "");
   };
 
   return (
@@ -20,13 +46,14 @@ function SearchBar({ handleSearch }) {
       <input
         type="text"
         className="search-input"
+        value={searchParams.name}
         placeholder="Buscar por nombre..."
         onChange={(e) => handleChange(e.target.value, "name")}
       />
       <select
         className="search-select"
+        value={searchParams.category}
         onChange={(e) => handleChange(e.target.value, "category")}
-        defaultValue=""
       >
         <option value="">Seleccione una categoría</option>
         <option value="CLOTHES">Ropa</option>
@@ -35,8 +62,8 @@ function SearchBar({ handleSearch }) {
       </select>
       <select
         className="search-select"
+        value={searchParams.subcategory}
         onChange={(e) => handleChange(e.target.value, "subcategory")}
-        defaultValue=""
       >
         <option value="">Seleccione una subcategoría</option>
         <option value="FASHION">Moda</option>
@@ -53,11 +80,42 @@ function SearchBar({ handleSearch }) {
         <option value="TROUSERS">Pantalones</option>
         <option value="BALLS">Balones</option>
       </select>
+      {user?.role == "COMPRADOR" && (
+        <select
+          className="search-select"
+          value={searchParams.sortPrice}
+          onChange={(e) => handleChange(e.target.value, "sortPrice")}
+        >
+          <option value="">Ordenar por precio</option>
+          <option value="asc">Ascendente</option>
+          <option value="desc">Descendente</option>
+        </select>
+      )}
+      {user?.role == "VENDEDOR" && (
+        <select
+          className="search-select"
+          value={searchParams.activeStatus}
+          onChange={(e) => handleChange(e.target.value, "activeStatus")}
+        >
+          <option value="">Estado del producto</option>
+          <option value="active">Activo</option>
+          <option value="inactive">Inactivo</option>
+        </select>
+      )}
       <button
-        className="search-button"
+        className="searchBarrButton search-button"
         onClick={() => handleSearch(searchParams)}
       >
         Buscar
+      </button>
+      <button
+        className={`searchBarrButton ${
+          !isFilterActive() ? "blockButton" : " searchBarrButton search-button"
+        }`}
+        onClick={handleClearFilter}
+        disabled={!isFilterActive()}
+      >
+        Borrar filtro
       </button>
     </div>
   );
