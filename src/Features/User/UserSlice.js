@@ -71,7 +71,6 @@ const userSlice = createSlice({
         state.error = !state.error;
         state.loading = false;
       })
-      // Post user purchase
       .addCase(postUserPurchase.pending, (state) => {
         state.loading = true;
       })

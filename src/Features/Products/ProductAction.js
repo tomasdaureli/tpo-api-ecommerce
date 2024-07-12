@@ -57,7 +57,6 @@ export const getProductsBySeller = createAsyncThunk(
 
     try {
       const response = await fetch(url, {
-        // Uso correcto de `sellerId`
         method: "GET",
         headers: {
           "Content-Type": "application/json",

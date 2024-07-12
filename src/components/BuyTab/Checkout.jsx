@@ -77,7 +77,7 @@ export function Checkout({}) {
     const { value } = event.target;
     setDiscountCode(value);
     setIsDiscountCodeValid(false);
-    setTotalChanged(null); // Reset the totalChanged when code is changed
+    setTotalChanged(null);
   };
 
   const isPurchaseButtonEnabled = () => {
