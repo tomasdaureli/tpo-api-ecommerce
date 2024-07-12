@@ -22,11 +22,7 @@ export function User() {
       .catch((error) => {
         console.error("Get user by jwt failed:", error);
       });
-  }, []);
-
-  const refreshProducts = () => {
-    dispatch(getUserByJWT());
-  };
+  }, [dispatch]);
 
   function LogOut() {
     localStorage.removeItem("USER");
@@ -64,7 +60,7 @@ export function User() {
         </div>
       )}
 
-      <UserPnSList user={user} refreshProducts={refreshProducts} />
+      <UserPnSList />
     </>
   );
 }

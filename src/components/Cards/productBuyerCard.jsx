@@ -7,16 +7,16 @@ export function ProductBuyerCard({ product, refreshProducts }) {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.products);
 
-  const handleConfirmBuy = async () => {
-    dispatch(patchConfirmPurchase(product.number));
-  };
-
   useEffect(() => {
     console.log(status);
     if (status === "succeeded") {
       refreshProducts();
     }
-  }, [status]);
+  }, [status, dispatch]);
+
+  const handleConfirmBuy = async () => {
+    dispatch(patchConfirmPurchase(product.number));
+  };
 
   return (
     <div className="userItem">

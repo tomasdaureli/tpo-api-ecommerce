@@ -72,6 +72,7 @@ export const ProductList = ({ addedProduct, setAddedProduct }) => {
     );
 
     if (existingProduct) {
+      console.log(product);
       if (existingProduct.quantity + 1 > product.stock) {
         Alert(
           "warning",

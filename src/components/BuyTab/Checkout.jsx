@@ -51,7 +51,7 @@ export function Checkout({}) {
         );
         Alert(
           "success",
-          "Gracias por comprar con nosotros!",
+          "Reservaste tu compra! Ve a la seccion de usuarios para confirmarla!",
           "center",
           "validationMessage"
         );
@@ -108,7 +108,7 @@ export function Checkout({}) {
               className="confirm-button"
               onClick={() => handlePurchase(cart.products)}
             >
-              Confirmar compra
+              Reservar compra
             </button>
           </div>
         </div>

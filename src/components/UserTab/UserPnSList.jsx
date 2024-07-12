@@ -8,13 +8,13 @@ import Paginator from "../utils/Paginator/Paginator";
 import { getCoupons } from "../../Features/Coupons/CuponsAction";
 import CouponCard from "../Cards/cuponCard";
 import CreateCouponModal from "../modals/CouponModal/CreateCouponModal ";
+import { getUserByJWT } from "../../Features/User/UserAction";
 
-export function UserPnSList({ refreshProducts }) {
+export function UserPnSList() {
   const dispatch = useDispatch();
-  const { products, status, error } = useSelector((state) => state.products);
   const { coupons, couponsStatus, couponsError, couponsPatchStatus } =
     useSelector((state) => state.coupons);
-  const { user, buys } = useSelector((state) => state.user);
+  const { user, status, buys } = useSelector((state) => state.user);
 
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [currentCuponIndex, setCurrentCuponIndex] = useState(0);
@@ -36,7 +36,11 @@ export function UserPnSList({ refreshProducts }) {
     if (user?.role === "COMPRADOR") {
       setProductsToShow(buys);
     }
-  }, [user?.id, user?.role, dispatch]);
+  }, [status, user?.id, user?.role, dispatch]);
+
+  const refreshProducts = () => {
+    dispatch(getUserByJWT());
+  };
 
   const openCreateModal = () => setShowCreateModal(true);
   const closeCreateModal = () => {

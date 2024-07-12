@@ -10,7 +10,7 @@ const Alert = (icon, title, position = "top-end", popup = "custom-popup") => {
     title,
     toast: true,
     showConfirmButton: false,
-    timer: 3000,
+    timer: 5000,
     timerProgressBar: true,
     background: "#fff",
     color: "#333",
@@ -22,6 +22,7 @@ const Alert = (icon, title, position = "top-end", popup = "custom-popup") => {
     didOpen: (toast) => {
       toast.addEventListener("mouseenter", Swal.stopTimer);
       toast.addEventListener("mouseleave", Swal.resumeTimer);
+      toast.clickc("mouseleave", Swal.close);
     },
   });
 };
