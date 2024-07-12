@@ -32,6 +32,22 @@ export const ProductCards = ({
           />
         </figure>
         <div className="info-product">
+          {user?.role === "VENDEDOR" && (
+            <div class="product-status product-card-status">
+              {product.active ? (
+                <>
+                  <div className="status-indicator active"></div>
+                  <span className="status-text">Activo</span>
+                </>
+              ) : (
+                <>
+                  <div className="status-indicator inactive"></div>
+                  <span className="status-text">Inactivo</span>
+                </>
+              )}
+            </div>
+          )}
+
           <h2>{product.productName}</h2>
           <p className="price">${product.price}</p>
           {user?.role === "COMPRADOR" && (

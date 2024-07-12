@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteProduct,
   getProductById,
+  updateProduct,
 } from "../../../Features/Products/ProductAction";
 import "./productInspection.css";
 import { getUserByJWT } from "../../../Features/User/UserAction";
@@ -14,7 +15,9 @@ import Alert from "../../utils/SweetAlerts2/Alert";
 
 export function ProductInspection({ addedProduct, setAddedProduct }) {
   const dispatch = useDispatch();
-  const { product, status, error } = useSelector((state) => state.products);
+  const { product, status, error, changeFlag } = useSelector(
+    (state) => state.products
+  );
   const { user } = useSelector((state) => state.user);
   const { productId } = useParams();
   const [createProduct, setCreateProduct] = useState(false);
@@ -37,18 +40,15 @@ export function ProductInspection({ addedProduct, setAddedProduct }) {
 
   useEffect(() => {
     dispatch(getProductById(formattedProductId));
-    const loadUser = async () => {
-      dispatch(getUserByJWT())
-        .unwrap()
-        .then((result) => {
-          localStorage.setItem("USER", JSON.stringify(result));
-        })
-        .catch((error) => {
-          console.error("Product Inspector failed:", error);
-        });
-    };
-    loadUser();
-  }, [createProduct]);
+    dispatch(getUserByJWT())
+      .unwrap()
+      .then((result) => {
+        localStorage.setItem("USER", JSON.stringify(result));
+      })
+      .catch((error) => {
+        console.error("Product Inspector failed:", error);
+      });
+  }, [dispatch, changeFlag, createProduct]);
 
   useEffect(() => {
     setImg(product.urlImage || imgen);
@@ -101,8 +101,17 @@ export function ProductInspection({ addedProduct, setAddedProduct }) {
     setAddedProduct(!addedProduct);
   };
 
-  const handdleProductUpdate = () => {
+  const handleProductUpdate = () => {
     setCreateProduct(!createProduct);
+  };
+
+  const handleProductStatusChange = () => {
+    dispatch(
+      updateProduct({
+        product: { ...product, active: !product.active },
+        id: product.id,
+      })
+    );
   };
 
   const handleOpenModal = () => {
@@ -174,6 +183,19 @@ export function ProductInspection({ addedProduct, setAddedProduct }) {
             <p>
               <strong>Precio: </strong>${product.price}
             </p>
+            <div className="product-status">
+              {product.active ? (
+                <>
+                  <div className="status-indicator active"></div>
+                  <span className="status-text">Activo</span>
+                </>
+              ) : (
+                <>
+                  <div className="status-indicator inactive"></div>
+                  <span className="status-text">Inactivo</span>
+                </>
+              )}
+            </div>
             {user?.role === "COMPRADOR" ? (
               <button
                 className="add-to-cart"
@@ -182,34 +204,45 @@ export function ProductInspection({ addedProduct, setAddedProduct }) {
                 Añadir al carrito
               </button>
             ) : (
-              <>
-                <button className="add-to-cart" onClick={handdleProductUpdate}>
+              <div className="insp-buttons-changes">
+                <button
+                  className="update-product-button"
+                  onClick={handleProductUpdate}
+                >
                   Actualizar producto
                 </button>
                 <button
-                  className="add-to-cart delete"
-                  onClick={() => handleOpenModal()}
+                  className={`change-status-button ${
+                    product.active ? "deactive" : "active"
+                  }`}
+                  onClick={handleProductStatusChange}
                 >
-                  Eliminar producto
+                  {product.active ? "Desactivar producto" : "Activar producto"}
                 </button>
-              </>
+              </div>
             )}
           </div>
-          <div class="product-details">
-            <div class="product-description">
+          <div className="product-details">
+            <div className="product-description">
               <h2>Descripción</h2>
               <p>{product.description}</p>
             </div>
 
-            <div class="product-category">
+            <div className="product-category">
               <h3>Categoría</h3>
               <p>{product.category}</p>
             </div>
 
-            <div class="product-subcategory">
+            <div className="product-subcategory">
               <h3>Subcategoría</h3>
               <p>{product.subcategory}</p>
             </div>
+          </div>
+          <div className="danger-zone">
+            <h2>Zona de peligro</h2>
+            <button className="danger-button" onClick={() => handleOpenModal()}>
+              Eliminar producto
+            </button>
           </div>
         </div>
       )}

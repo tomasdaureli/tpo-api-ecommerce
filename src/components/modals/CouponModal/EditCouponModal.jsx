@@ -3,7 +3,7 @@ import "./EditCouponModal.css";
 import { useDispatch } from "react-redux";
 import { patchCupon } from "../../../Features/Coupons/CuponsAction";
 
-const EditCouponModal = ({ coupon, onClose }) => {
+const EditCouponModal = ({ coupon, setShowModal }) => {
   const dispatch = useDispatch();
 
   const [code, setCode] = useState(coupon.code);
@@ -23,11 +23,7 @@ const EditCouponModal = ({ coupon, onClose }) => {
     e.preventDefault();
     dispatch(
       patchCupon({ discount: { code, percentage, expiryDate }, id: coupon.id })
-    )
-      .unwrap()
-      .then(() => {
-        onClose();
-      });
+    );
   };
 
   return (
@@ -59,7 +55,12 @@ const EditCouponModal = ({ coupon, onClose }) => {
             />
           </label>
           <button type="submit">Guardar cambios</button>
-          <button type="button" onClick={onClose}>
+          <button
+            type="button"
+            onClick={() => {
+              setShowModal(false);
+            }}
+          >
             Cancelar
           </button>
         </form>

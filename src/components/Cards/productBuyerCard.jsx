@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./productUserCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { patchConfirmPurchase } from "../../Features/Products/ProductAction";
@@ -19,22 +19,24 @@ export function ProductBuyerCard({ product, refreshProducts }) {
   };
 
   return (
-    <div className="userItem">
+    <div className="buyer-card">
       Productos:
-      <div className="productSpans">
+      <div className="buyer-product-spans">
         {product?.items?.map((p, index) => (
           <span key={index}>
             {p.nameProduct} - Cantidad: {p.quantity}
           </span>
         ))}
       </div>
-      <div className="user-info-product">
-        <p className="price">Total: ${product.total}</p>
-        <div className="status">Estado de la compra: {product.status}</div>
+      <div className="buyer-product-info">
+        <p className="buyer-price">Total: ${product.total}</p>
+        <div className="buyer-status">
+          Estado de la compra: {product.status}
+        </div>
         {product.status === "PENDING" ? (
           <button
             type="button"
-            className="send-button"
+            className="vendor-button"
             onClick={handleConfirmBuy}
           >
             Terminar compra

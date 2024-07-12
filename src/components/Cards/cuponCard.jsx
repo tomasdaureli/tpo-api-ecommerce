@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./couponCard.css";
 import EditCouponModal from "../modals/CouponModal/EditCouponModal.jsx";
+import { useSelector } from "react-redux";
 
 const CouponCard = ({ coupon }) => {
   const [showModal, setShowModal] = useState(false);
+  const { changeCouponsSliceFlag } = useSelector((state) => state.coupons);
+
+  useEffect(() => {
+    setShowModal(false);
+  }, [changeCouponsSliceFlag]);
 
   const handleEdit = () => {
     setShowModal(true);
@@ -18,7 +24,7 @@ const CouponCard = ({ coupon }) => {
         Editar
       </button>
       {showModal && (
-        <EditCouponModal coupon={coupon} onClose={() => setShowModal(false)} />
+        <EditCouponModal coupon={coupon} setShowModal={setShowModal} />
       )}
     </div>
   );

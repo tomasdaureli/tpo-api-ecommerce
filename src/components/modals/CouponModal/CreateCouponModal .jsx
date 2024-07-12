@@ -4,7 +4,7 @@ import { postCupons } from "../../../Features/Coupons/CuponsAction";
 import "./CreateCouponModal.css";
 import Alert from "../../utils/SweetAlerts2/Alert";
 
-const CreateCouponModal = ({ onClose }) => {
+const CreateCouponModal = ({ setShowCreateModal }) => {
   const [code, setCode] = useState("");
   const [percentage, setPercentage] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
@@ -21,12 +21,8 @@ const CreateCouponModal = ({ onClose }) => {
       return;
     }
 
-    dispatch(postCupons({ code, percentage, expiryDate }))
-      .unwrap()
-      .then((resp) => {
-        Alert("success", "El Cupon a sido creado");
-      });
-    onClose();
+    dispatch(postCupons({ code, percentage, expiryDate }));
+    Alert("success", "El Cupon a sido creado");
   };
 
   return (
@@ -63,7 +59,13 @@ const CreateCouponModal = ({ onClose }) => {
           <button type="submit" className="couponModalButton">
             Crear Cupón
           </button>
-          <button type="button" className="couponModalButton" onClick={onClose}>
+          <button
+            type="button"
+            className="couponModalButton"
+            onClick={() => {
+              setShowCreateModal(false);
+            }}
+          >
             Cancelar
           </button>
         </form>

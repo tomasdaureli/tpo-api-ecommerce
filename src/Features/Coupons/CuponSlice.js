@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getCoupons, patchCupon } from "./CuponsAction";
+import { getCoupons, patchCupon, postCupons } from "./CuponsAction";
 
 const initialState = {
   coupons: [],
   cupon: [],
   couponsStatus: "loading",
-  couponsPatchStatus: false,
+  changeCouponsSliceFlag: false,
   couponsError: null,
 };
 
@@ -26,6 +26,18 @@ const couponsSlice = createSlice({
         state.couponsError = action.payload;
         state.couponsStatus = "failed";
       })
+      .addCase(postCupons.pending, (state) => {
+        state.couponsStatus = "loading";
+      })
+      .addCase(postCupons.fulfilled, (state, action) => {
+        state.coupons.push(action.payload);
+        state.couponsStatus = "succeeded";
+        state.changeCouponsSliceFlag = !state.changeCouponsSliceFlag;
+      })
+      .addCase(postCupons.rejected, (state, action) => {
+        state.couponsError = action.payload;
+        state.couponsStatus = "failed";
+      })
       .addCase(patchCupon.pending, (state) => {
         state.couponsStatus = "loading";
       })
@@ -37,7 +49,7 @@ const couponsSlice = createSlice({
           state.coupons[index] = action.payload;
         }
         state.couponsStatus = "succeeded";
-        state.couponsPatchStatus = !state.couponsPatchStatus;
+        state.changeCouponsSliceFlag = !state.changeCouponsSliceFlag;
       })
       .addCase(patchCupon.rejected, (state, action) => {
         state.couponsError = action.payload;

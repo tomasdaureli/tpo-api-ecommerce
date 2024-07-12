@@ -29,22 +29,17 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(postProduct(productToSend))
-      .unwrap()
-      .then((response) => {
-        if (response && response.id) {
-          setProductToSend({
-            productName: "",
-            price: "",
-            urlImage: "",
-            stock: "",
-            description: "",
-            category: "",
-            subcategory: "",
-          });
-          setCreateProduct(false);
-        }
-      });
+    dispatch(postProduct(productToSend));
+    setProductToSend({
+      productName: "",
+      price: "",
+      urlImage: "",
+      stock: "",
+      description: "",
+      category: "",
+      subcategory: "",
+    });
+    setCreateProduct(false);
   };
 
   const handleCancel = async (event) => {
@@ -54,25 +49,17 @@ function AddProductForm({ setCreateProduct, productToUpdate }) {
 
   const handleUpdate = async (event) => {
     event.preventDefault();
-    dispatch(updateProduct({ product: productToSend, id: productToUpdate.id }))
-      .unwrap()
-      .then((response) => {
-        if (response && response.id) {
-          setProductToSend({
-            productName: "",
-            price: "",
-            urlImage: "",
-            stock: "",
-            description: "",
-            category: "",
-            subcategory: "",
-          });
-          setCreateProduct(false);
-        }
-      })
-      .catch((error) => {
-        console.error("Add product form failed:", error);
-      });
+    dispatch(updateProduct({ product: productToSend, id: productToUpdate.id }));
+    setProductToSend({
+      productName: "",
+      price: "",
+      urlImage: "",
+      stock: "",
+      description: "",
+      category: "",
+      subcategory: "",
+    });
+    setCreateProduct(false);
   };
   return (
     <>

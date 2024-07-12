@@ -8,11 +8,10 @@ import Paginator from "../utils/Paginator/Paginator";
 import { getCoupons } from "../../Features/Coupons/CuponsAction";
 import CouponCard from "../Cards/cuponCard";
 import CreateCouponModal from "../modals/CouponModal/CreateCouponModal ";
-import { getUserByJWT } from "../../Features/User/UserAction";
 
 export function UserPnSList() {
   const dispatch = useDispatch();
-  const { coupons, couponsStatus, couponsError, couponsPatchStatus } =
+  const { coupons, couponsStatus, couponsError, changeCouponsSliceFlag } =
     useSelector((state) => state.coupons);
   const { user, status, buys } = useSelector((state) => state.user);
 
@@ -26,7 +25,16 @@ export function UserPnSList() {
 
   useEffect(() => {
     if (user?.role === "VENDEDOR") {
-      dispatch(getProductsBySeller(user.id))
+      setShowCreateModal(false);
+      dispatch(
+        getProductsBySeller({
+          sellerId: user.id,
+          nombre: null,
+          category: null,
+          subcategory: null,
+          actives: null,
+        })
+      )
         .unwrap()
         .then((products) => {
           setProductsToShow(products);
@@ -36,13 +44,9 @@ export function UserPnSList() {
     if (user?.role === "COMPRADOR") {
       setProductsToShow(buys);
     }
-  }, [status, user?.id, user?.role, dispatch]);
+  }, [status, user?.id, user?.role, , changeCouponsSliceFlag, dispatch]);
 
   const openCreateModal = () => setShowCreateModal(true);
-  const closeCreateModal = () => {
-    dispatch(getCoupons());
-    setShowCreateModal(false);
-  };
 
   const purchasesBulks = productsToShow
     ? Array.from(
@@ -109,7 +113,7 @@ export function UserPnSList() {
                 Crear Cupón
               </button>
               {showCreateModal && (
-                <CreateCouponModal onClose={closeCreateModal} />
+                <CreateCouponModal setShowCreateModal={setShowCreateModal} />
               )}
               <Paginator
                 currentIndex={currentCuponIndex}

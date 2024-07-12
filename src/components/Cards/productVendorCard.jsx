@@ -17,30 +17,44 @@ export function ProductVendorCard({ product }) {
       setImg(imgen);
     }
   };
+
   const handleUpdateProduct = async (id) => {
     navigate(`/catalogo/${id}`);
   };
 
   return (
-    <div className="product-item">
-      <h4 className="product-title">{product.productName}</h4>
-      <div className="product-info">
+    <div className="vendor-card">
+      <h4 className="vendor-title">{product.productName}</h4>
+      <div className="product-status">
+        {product.active ? (
+          <>
+            <div className="status-indicator active"></div>
+            <span className="status-text">Activo</span>
+          </>
+        ) : (
+          <>
+            <div className="status-indicator inactive"></div>
+            <span className="status-text">Inactivo</span>
+          </>
+        )}
+      </div>
+      <div className="vendor-info">
         <img
           src={img}
           alt={product.productName}
           onError={handleError}
-          className="product-image"
+          className="vendor-image"
         />
-        <div className="product-details">
-          <p className="product-price">Precio: ${product.price}</p>
-          <p className="product-stock">Total stock: {product.stock}</p>
-          <p className="product-sold">Total vendido: {product.sold}</p>
+        <div className="vendor-details">
+          <p className="vendor-price">Precio: ${product.price}</p>
+          <p className="vendor-stock">Total stock: {product.stock}</p>
+          <p className="vendor-sold">Total vendido: {product.sold}</p>
           <button
             type="button"
-            className="send-button"
+            className="vendor-button"
             onClick={() => handleUpdateProduct(product.id)}
           >
-            Actualizar informacion
+            Actualizar información
           </button>
         </div>
       </div>

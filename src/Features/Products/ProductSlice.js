@@ -14,6 +14,7 @@ const initialState = {
   products: [],
   product: [],
   status: "loading", // 'loading', 'succeeded', 'failed'
+  changeFlag: false,
   error: null,
 };
 
@@ -83,6 +84,7 @@ const productsSlice = createSlice({
       .addCase(postProduct.fulfilled, (state, action) => {
         state.products.push(action.payload);
         state.status = "succeeded";
+        state.changeFlag = !state.changeFlag;
       })
       .addCase(postProduct.rejected, (state, action) => {
         state.status = "failed";
@@ -92,11 +94,14 @@ const productsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
-        const index = state.products.findIndex((p) => p.id === action.payload.id);
+        const index = state.products.findIndex(
+          (p) => p.id === action.payload.id
+        );
         if (index !== -1) {
           state.products[index] = action.payload;
         }
         state.status = "succeeded";
+        state.changeFlag = !state.changeFlag;
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.status = "failed";
