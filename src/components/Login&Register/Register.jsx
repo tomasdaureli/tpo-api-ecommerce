@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import "./Login&Register.css";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../Features/User/UserAction";
+import Alert from "../utils/SweetAlerts2/Alert";
 
 export function Register() {
   const dispatch = useDispatch();
-  const { user, status, error } = useSelector((state) => state.user);
+  const { user, status, error, errorMessage } = useSelector(
+    (state) => state.user
+  );
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -18,6 +21,12 @@ export function Register() {
   const [confirmation, setConfirmation] = useState(false);
 
   let navigate = useNavigate();
+
+  useEffect(() => {
+    if (errorMessage) {
+      Alert("error", errorMessage);
+    }
+  }, [error]);
 
   useEffect(() => {
     const loadUser = () => {
@@ -61,6 +70,7 @@ export function Register() {
           password: "",
           confirmPassword: "",
         });
+        Alert("success", "Te registraste correctamente");
         navigate("/", { replace: true });
       })
       .catch((error) => {

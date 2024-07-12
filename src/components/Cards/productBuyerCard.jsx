@@ -3,10 +3,19 @@ import "./productUserCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { patchConfirmPurchase } from "../../Features/Products/ProductAction";
 import { getUserByJWT } from "../../Features/User/UserAction";
+import Alert from "../utils/SweetAlerts2/Alert";
 
 export function ProductBuyerCard({ product, refreshProducts }) {
   const dispatch = useDispatch();
-  const { status, error } = useSelector((state) => state.products);
+  const { status, error, errorMessage } = useSelector(
+    (state) => state.products
+  );
+
+  useEffect(() => {
+    if (errorMessage) {
+      Alert("error", errorMessage);
+    }
+  }, [error, dispatch]);
 
   useEffect(() => {
     if (status === "succeeded") {
@@ -24,7 +33,8 @@ export function ProductBuyerCard({ product, refreshProducts }) {
       <div className="buyer-product-spans">
         {product?.items?.map((p, index) => (
           <span key={index}>
-            {p.nameProduct} - Cantidad: {p.quantity}
+            {console.log(p.productName)}
+            {p.product.productName} - Cantidad: {p.quantity}
           </span>
         ))}
       </div>

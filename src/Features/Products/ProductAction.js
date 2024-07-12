@@ -93,14 +93,14 @@ export const getProductById = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!response.ok) {
-        throw new Error("No se pudieron obtener los productos");
-      }
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message);
+      }
       return data;
     } catch (error) {
       console.error("Error:", error);
-      return rejectWithValue("No se pudieron obtener los productos");
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -117,14 +117,14 @@ export const patchConfirmPurchase = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!response.ok) {
-        throw new Error("No se pudieron obtener los productos");
-      }
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message);
+      }
+
       return data;
     } catch (error) {
-      console.error("Error:", error);
-      return rejectWithValue("No se pudieron obtener los productos");
+      return rejectWithValue(error.message);
     }
   }
 );

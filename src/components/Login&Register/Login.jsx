@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import "./Login&Register.css";
 import { getUserByJWT, loginUser } from "../../Features/User/UserAction";
 import { useDispatch, useSelector } from "react-redux";
+import Alert from "../utils/SweetAlerts2/Alert";
 
 export function Login() {
   const dispatch = useDispatch();
-  const { user, status, error } = useSelector((state) => state.user);
+  const { user, status, error, errorMessage } = useSelector(
+    (state) => state.user
+  );
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,6 +19,12 @@ export function Login() {
   const [confirmation, setConfirmation] = useState(false);
 
   let navigate = useNavigate();
+
+  useEffect(() => {
+    if (errorMessage) {
+      Alert("error", errorMessage);
+    }
+  }, [error]);
 
   useEffect(() => {
     const loadUser = () => {

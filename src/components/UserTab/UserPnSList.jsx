@@ -14,7 +14,7 @@ export function UserPnSList() {
   const dispatch = useDispatch();
   const { coupons, couponsError, couponsErrorMessage, changeCouponsSliceFlag } =
     useSelector((state) => state.coupons);
-  const { user, status, buys } = useSelector((state) => state.user);
+  const { user, status, buys, loading } = useSelector((state) => state.user);
 
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [currentCuponIndex, setCurrentCuponIndex] = useState(0);
@@ -68,8 +68,8 @@ export function UserPnSList() {
     : [];
   return (
     <>
-      {!user ? (
-        <div>Cargando datos del usuario...</div>
+      {loading ? (
+        ""
       ) : (
         <div
           className="container"

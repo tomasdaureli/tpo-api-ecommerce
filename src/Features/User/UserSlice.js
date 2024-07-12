@@ -31,7 +31,7 @@ const userSlice = createSlice({
       })
       .addCase(getUserById.rejected, (state, action) => {
         state.errorMessage = action.payload;
-        state.error = true;
+        state.error = !state.error;
         state.loading = false;
       })
       .addCase(getUserByJWT.pending, (state) => {
@@ -44,7 +44,7 @@ const userSlice = createSlice({
       })
       .addCase(getUserByJWT.rejected, (state, action) => {
         state.errorMessage = action.payload;
-        state.error = true;
+        state.error = !state.error;
         state.loading = false;
       })
       .addCase(registerUser.pending, (state) => {
@@ -56,10 +56,9 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.errorMessage = action.payload;
-        state.error = true;
+        state.error = !state.error;
         state.loading = false;
       })
-      // Login user
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
       })
@@ -69,7 +68,7 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.errorMessage = action.payload;
-        state.error = true;
+        state.error = !state.error;
         state.loading = false;
       })
       // Post user purchase
@@ -82,7 +81,7 @@ const userSlice = createSlice({
       })
       .addCase(postUserPurchase.rejected, (state, action) => {
         state.errorMessage = action.payload;
-        state.error = true;
+        state.error = !state.error;
         state.loading = false;
       });
   },

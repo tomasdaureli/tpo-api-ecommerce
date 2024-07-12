@@ -15,7 +15,7 @@ import Alert from "../../utils/SweetAlerts2/Alert";
 
 export function ProductInspection({ addedProduct, setAddedProduct }) {
   const dispatch = useDispatch();
-  const { product, status, error, changeFlag } = useSelector(
+  const { product, status, error, errorMessage, changeFlag } = useSelector(
     (state) => state.products
   );
   const { user } = useSelector((state) => state.user);
@@ -37,6 +37,12 @@ export function ProductInspection({ addedProduct, setAddedProduct }) {
       setCart(cart);
     }
   }, []);
+
+  useEffect(() => {
+    if (errorMessage) {
+      Alert("error", errorMessage);
+    }
+  }, [error]);
 
   useEffect(() => {
     dispatch(getProductById(formattedProductId));

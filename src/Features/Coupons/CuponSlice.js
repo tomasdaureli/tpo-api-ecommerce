@@ -26,7 +26,7 @@ const couponsSlice = createSlice({
       })
       .addCase(getCoupons.rejected, (state, action) => {
         state.couponsErrorMessage = action.payload;
-        state.couponsError = true;
+        state.couponsError = !state.couponsError;
         state.couponsLoading = false;
       })
       .addCase(postCupons.pending, (state) => {
@@ -40,7 +40,7 @@ const couponsSlice = createSlice({
       })
       .addCase(postCupons.rejected, (state, action) => {
         state.couponsErrorMessage = action.payload;
-        state.couponsError = true;
+        state.couponsError = !state.couponsError;
         state.couponsLoading = false;
       })
       .addCase(patchCupon.pending, (state) => {
@@ -59,7 +59,7 @@ const couponsSlice = createSlice({
       })
       .addCase(patchCupon.rejected, (state, action) => {
         state.couponsErrorMessage = action.payload;
-        state.couponsError = true;
+        state.couponsError = !state.couponsError;
         state.couponsLoading = false;
       });
   },

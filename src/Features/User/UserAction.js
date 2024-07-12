@@ -46,14 +46,15 @@ export const registerUser = createAsyncThunk(
         },
         body: JSON.stringify(user),
       });
+
       if (!response.ok) {
-        throw new Error("Error en tu petición");
+        const data = await response.json();
+        throw new Error(data.message);
       }
       const users = await response.json();
       return users[0] || null;
     } catch (error) {
-      console.error("Error: :", error);
-      return rejectWithValue("Error en tu petición");
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -69,13 +70,14 @@ export const loginUser = createAsyncThunk(
         },
         body: JSON.stringify(user),
       });
+
       if (!response.ok) {
-        throw new Error("Error en tu petición");
+        const data = await response.json();
+        throw new Error(data.message);
       }
       return await response.json();
     } catch (error) {
-      console.error("Error: :", error);
-      return rejectWithValue("Error en tu petición");
+      return rejectWithValue(error.message);
     }
   }
 );
