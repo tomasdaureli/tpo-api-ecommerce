@@ -1,15 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./productUserCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { patchConfirmPurchase } from "../../Features/Products/ProductAction";
 import { getUserByJWT } from "../../Features/User/UserAction";
 import Alert from "../utils/SweetAlerts2/Alert";
 
-export function ProductBuyerCard({ product, refreshProducts }) {
+export function ProductBuyerCard({ product }) {
   const dispatch = useDispatch();
+  const [productStatus, setProductStatus] = useState("");
   const { status, error, errorMessage } = useSelector(
     (state) => state.products
   );
+
+  useEffect(() => {
+    setProductStatus(product.status);
+  }, []);
 
   useEffect(() => {
     if (errorMessage) {
@@ -24,7 +29,12 @@ export function ProductBuyerCard({ product, refreshProducts }) {
   }, [status, dispatch]);
 
   const handleConfirmBuy = async () => {
-    dispatch(patchConfirmPurchase(product.number));
+    dispatch(patchConfirmPurchase(product.number))
+      .unwrap()
+      .then((prod) => {
+        setProductStatus(prod.status);
+        Alert("success", "Compra confirmada con exito!");
+      });
   };
 
   return (
@@ -33,17 +43,14 @@ export function ProductBuyerCard({ product, refreshProducts }) {
       <div className="buyer-product-spans">
         {product?.items?.map((p, index) => (
           <span key={index}>
-            {console.log(p.productName)}
             {p.product.productName} - Cantidad: {p.quantity}
           </span>
         ))}
       </div>
       <div className="buyer-product-info">
         <p className="buyer-price">Total: ${product.total}</p>
-        <div className="buyer-status">
-          Estado de la compra: {product.status}
-        </div>
-        {product.status === "PENDING" ? (
+        <div className="buyer-status">Estado de la compra: {productStatus}</div>
+        {productStatus === "PENDING" ? (
           <button
             type="button"
             className="vendor-button"
