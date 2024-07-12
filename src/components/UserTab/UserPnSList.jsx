@@ -38,10 +38,6 @@ export function UserPnSList() {
     }
   }, [status, user?.id, user?.role, dispatch]);
 
-  const refreshProducts = () => {
-    dispatch(getUserByJWT());
-  };
-
   const openCreateModal = () => setShowCreateModal(true);
   const closeCreateModal = () => {
     dispatch(getCoupons());
@@ -91,11 +87,7 @@ export function UserPnSList() {
                 <>
                   {purchasesBulks[currentProductIndex]?.map(
                     (product, index) => (
-                      <ProductBuyerCard
-                        product={product}
-                        key={index}
-                        refreshProducts={refreshProducts}
-                      />
+                      <ProductBuyerCard product={product} key={index} />
                     )
                   )}
                 </>
@@ -103,11 +95,7 @@ export function UserPnSList() {
                 <>
                   {purchasesBulks[currentProductIndex]?.map(
                     (product, index) => (
-                      <ProductVendorCard
-                        product={product}
-                        key={index}
-                        refreshProducts={refreshProducts}
-                      />
+                      <ProductVendorCard product={product} key={index} />
                     )
                   )}
                 </>

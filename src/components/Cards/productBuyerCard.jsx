@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import "./productUserCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { patchConfirmPurchase } from "../../Features/Products/ProductAction";
+import { getUserByJWT } from "../../Features/User/UserAction";
 
 export function ProductBuyerCard({ product, refreshProducts }) {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.products);
 
   useEffect(() => {
-    console.log(status);
     if (status === "succeeded") {
-      refreshProducts();
+      dispatch(getUserByJWT());
     }
   }, [status, dispatch]);
 

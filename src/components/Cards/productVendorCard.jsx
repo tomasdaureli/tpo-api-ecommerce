@@ -3,7 +3,7 @@ import "./productUserCard.css";
 import imgen from "../../assets/imgs/noProductImage.png";
 import { useNavigate } from "react-router-dom";
 
-export function ProductVendorCard({ product, refreshProducts }) {
+export function ProductVendorCard({ product }) {
   const navigate = useNavigate();
 
   const [img, setImg] = useState("");
