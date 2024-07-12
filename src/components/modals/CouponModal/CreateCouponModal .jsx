@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postCupons } from "../../../Features/Coupons/CuponsAction";
 import "./CreateCouponModal.css";
 import Alert from "../../utils/SweetAlerts2/Alert";
@@ -20,9 +20,11 @@ const CreateCouponModal = ({ setShowCreateModal }) => {
       Alert("error", "La fecha de expiración debe estar en el futuro.");
       return;
     }
-
-    dispatch(postCupons({ code, percentage, expiryDate }));
-    Alert("success", "El Cupon a sido creado");
+    dispatch(postCupons({ code, percentage, expiryDate }))
+      .unwrap()
+      .then(() => {
+        Alert("success", "El Cupon a sido creado");
+      });
   };
 
   return (

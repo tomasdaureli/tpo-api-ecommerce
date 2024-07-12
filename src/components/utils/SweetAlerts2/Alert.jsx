@@ -22,7 +22,7 @@ const Alert = (icon, title, position = "top-end", popup = "custom-popup") => {
     didOpen: (toast) => {
       toast.addEventListener("mouseenter", Swal.stopTimer);
       toast.addEventListener("mouseleave", Swal.resumeTimer);
-      toast.clickc("mouseleave", Swal.close);
+      toast.click("mouseleave", Swal.close);
     },
   });
 };

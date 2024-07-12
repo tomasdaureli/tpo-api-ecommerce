@@ -11,8 +11,9 @@ import {
 const initialState = {
   user: null,
   buys: [],
-  status: "idle",
-  error: null,
+  loading: false,
+  error: false,
+  errorMessage: "",
 };
 
 const userSlice = createSlice({
@@ -22,62 +23,67 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getUserById.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(getUserById.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(getUserById.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
+        state.errorMessage = action.payload;
+        state.error = true;
+        state.loading = false;
       })
       .addCase(getUserByJWT.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(getUserByJWT.fulfilled, (state, action) => {
         state.user = action.payload;
         state.buys = action.payload.buys || [];
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(getUserByJWT.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
+        state.errorMessage = action.payload;
+        state.error = true;
+        state.loading = false;
       })
       .addCase(registerUser.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
+        state.errorMessage = action.payload;
+        state.error = true;
+        state.loading = false;
       })
       // Login user
       .addCase(loginUser.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
+        state.errorMessage = action.payload;
+        state.error = true;
+        state.loading = false;
       })
       // Post user purchase
       .addCase(postUserPurchase.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(postUserPurchase.fulfilled, (state, action) => {
         state.buys.push(action.payload);
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(postUserPurchase.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
+        state.errorMessage = action.payload;
+        state.error = true;
+        state.loading = false;
       });
   },
 });

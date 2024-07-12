@@ -4,9 +4,10 @@ import { getCoupons, patchCupon, postCupons } from "./CuponsAction";
 const initialState = {
   coupons: [],
   cupon: [],
-  couponsStatus: "loading",
   changeCouponsSliceFlag: false,
-  couponsError: null,
+  couponsLoading: false,
+  couponsError: false,
+  couponsErrorMessage: "",
 };
 
 const couponsSlice = createSlice({
@@ -16,30 +17,35 @@ const couponsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getCoupons.pending, (state) => {
-        state.couponsStatus = "loading";
+        state.couponsLoading = true;
+        state.couponsErrorMessage = "";
       })
       .addCase(getCoupons.fulfilled, (state, action) => {
         state.coupons = action.payload;
-        state.couponsStatus = "succeeded";
+        state.couponsLoading = false;
       })
       .addCase(getCoupons.rejected, (state, action) => {
-        state.couponsError = action.payload;
-        state.couponsStatus = "failed";
+        state.couponsErrorMessage = action.payload;
+        state.couponsError = true;
+        state.couponsLoading = false;
       })
       .addCase(postCupons.pending, (state) => {
-        state.couponsStatus = "loading";
+        state.couponsLoading = true;
+        state.couponsErrorMessage = "";
       })
       .addCase(postCupons.fulfilled, (state, action) => {
         state.coupons.push(action.payload);
-        state.couponsStatus = "succeeded";
+        state.couponsLoading = false;
         state.changeCouponsSliceFlag = !state.changeCouponsSliceFlag;
       })
       .addCase(postCupons.rejected, (state, action) => {
-        state.couponsError = action.payload;
-        state.couponsStatus = "failed";
+        state.couponsErrorMessage = action.payload;
+        state.couponsError = true;
+        state.couponsLoading = false;
       })
       .addCase(patchCupon.pending, (state) => {
-        state.couponsStatus = "loading";
+        state.couponsLoading = true;
+        state.couponsErrorMessage = "";
       })
       .addCase(patchCupon.fulfilled, (state, action) => {
         const index = state.coupons.findIndex(
@@ -48,12 +54,13 @@ const couponsSlice = createSlice({
         if (index !== -1) {
           state.coupons[index] = action.payload;
         }
-        state.couponsStatus = "succeeded";
+        state.couponsLoading = false;
         state.changeCouponsSliceFlag = !state.changeCouponsSliceFlag;
       })
       .addCase(patchCupon.rejected, (state, action) => {
-        state.couponsError = action.payload;
-        state.couponsStatus = "failed";
+        state.couponsErrorMessage = action.payload;
+        state.couponsError = true;
+        state.couponsLoading = false;
       });
   },
 });

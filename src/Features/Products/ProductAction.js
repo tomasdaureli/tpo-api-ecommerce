@@ -4,30 +4,6 @@ const BASE_URL = "http://localhost:8080";
 
 export const getProducts = createAsyncThunk(
   "products/GetProducts",
-  async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem("access_token");
-    try {
-      const response = await fetch(`${BASE_URL}/products`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("No se pudieron obtener los productos");
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error:", error);
-      return rejectWithValue("No se pudieron obtener los productos");
-    }
-  }
-);
-
-export const getProductsByParameters = createAsyncThunk(
-  "products/GetProductsByParameter",
   async (
     { nombre, category, subcategory, sortPriceAsc },
     { rejectWithValue }
@@ -42,9 +18,8 @@ export const getProductsByParameters = createAsyncThunk(
     if (sortPriceAsc)
       params.append("sortPriceAsc", sortPriceAsc == "asc" ? true : false);
     url += `?${params.toString()}`;
-
     try {
-      const response = await fetch(url, {
+      const response = await fetch(`${BASE_URL}/products`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -94,7 +69,11 @@ export const getProductsBySeller = createAsyncThunk(
         throw new Error("No se pudieron obtener los productos");
       }
       const data = await response.json();
-      return data;
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(data);
+        }, 2000); // Simular retardo de 2 segundos
+      });
     } catch (error) {
       console.error("Error:", error);
       return rejectWithValue("No se pudieron obtener los productos");

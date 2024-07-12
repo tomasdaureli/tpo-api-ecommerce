@@ -8,7 +8,6 @@ import SearchBar from "../utils/Searchbar/SearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProducts,
-  getProductsByParameters,
   getProductsBySeller,
 } from "../../Features/Products/ProductAction";
 import { getUserByJWT } from "../../Features/User/UserAction";
@@ -16,7 +15,9 @@ import Alert from "../utils/SweetAlerts2/Alert";
 
 export const ProductList = ({ addedProduct, setAddedProduct }) => {
   const dispatch = useDispatch();
-  const { products, status, error } = useSelector((state) => state.products);
+  const { products, loading, error, errorMessage } = useSelector(
+    (state) => state.products
+  );
   const { user } = useSelector((state) => state.user);
   const [purchasesBulks, setPurchasesBulks] = useState([]);
   const [createProduct, setCreateProduct] = useState(false);
@@ -39,6 +40,12 @@ export const ProductList = ({ addedProduct, setAddedProduct }) => {
   }, []);
 
   useEffect(() => {
+    if (errorMessage) {
+      Alert("error", errorMessage);
+    }
+  }, [error]);
+
+  useEffect(() => {
     if (user?.role == "VENDEDOR") {
       dispatch(
         getProductsBySeller({
@@ -51,7 +58,15 @@ export const ProductList = ({ addedProduct, setAddedProduct }) => {
       );
     }
     if (user?.role == "COMPRADOR") {
-      dispatch(getProducts());
+      console.log(user.role);
+      dispatch(
+        getProducts({
+          nombre: null,
+          category: null,
+          subcategory: null,
+          sortPriceAsc: null,
+        })
+      );
     }
   }, [createProduct, user?.role]);
 
@@ -142,7 +157,7 @@ export const ProductList = ({ addedProduct, setAddedProduct }) => {
     }
     if (user?.role == "COMPRADOR") {
       dispatch(
-        getProductsByParameters({
+        getProducts({
           nombre: e.name,
           category: e.category,
           subcategory: e.subcategory,
@@ -202,18 +217,24 @@ export const ProductList = ({ addedProduct, setAddedProduct }) => {
               gridTemplateColumns: `repeat(${bulkSize}, minmax(180px, 1fr))`,
             }}
           >
-            {products.length > 0 ? (
-              purchasesBulks[currentIndex]?.map((product, index) => (
-                <ProductCards
-                  key={index}
-                  onAddProduct={onAddProduct}
-                  product={product}
-                  user={user}
-                  handleProductClick={handleProductClick}
-                />
-              ))
+            {loading ? (
+              <p>Cargando productos...</p>
             ) : (
-              <div>No hay ningún producto para mostrar...</div>
+              <>
+                {products?.length > 0 ? (
+                  purchasesBulks[currentIndex]?.map((product, index) => (
+                    <ProductCards
+                      key={index}
+                      onAddProduct={onAddProduct}
+                      product={product}
+                      user={user}
+                      handleProductClick={handleProductClick}
+                    />
+                  ))
+                ) : (
+                  <div>No hay ningún producto para mostrar...</div>
+                )}
+              </>
             )}
           </div>
         </>

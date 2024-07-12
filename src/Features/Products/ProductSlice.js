@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getProductById,
   getProducts,
-  getProductsByParameters,
   getProductsBySeller,
   patchConfirmPurchase,
   postProduct,
@@ -13,9 +12,10 @@ import {
 const initialState = {
   products: [],
   product: [],
-  status: "loading", // 'loading', 'succeeded', 'failed'
+  loading: false,
   changeFlag: false,
-  error: null,
+  error: false,
+  errorMessage: "",
 };
 
 const productsSlice = createSlice({
@@ -25,73 +25,73 @@ const productsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getProducts.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
+        state.errorMessage = "";
       })
       .addCase(getProducts.fulfilled, (state, action) => {
         state.products = action.payload;
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(getProducts.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
-      })
-      .addCase(getProductsByParameters.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(getProductsByParameters.fulfilled, (state, action) => {
-        state.products = action.payload;
-        state.status = "succeeded";
-      })
-      .addCase(getProductsByParameters.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
+        state.error = !state.error;
+        state.errorMessage = action.payload;
+        state.loading = false;
       })
       .addCase(getProductsBySeller.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
+        state.errorMessage = "";
       })
       .addCase(getProductsBySeller.fulfilled, (state, action) => {
         state.products = action.payload;
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(getProductsBySeller.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
+        state.error = !state.error;
+        state.errorMessage = action.payload;
+        state.loading = false;
       })
       .addCase(getProductById.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
+        state.errorMessage = "";
       })
       .addCase(getProductById.fulfilled, (state, action) => {
         state.product = action.payload;
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(getProductById.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
+        state.error = !state.error;
+        state.errorMessage = action.payload;
+        state.loading = false;
       })
       .addCase(patchConfirmPurchase.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
+        state.errorMessage = "";
       })
       .addCase(patchConfirmPurchase.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(patchConfirmPurchase.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
+        state.error = !state.error;
+        state.errorMessage = action.payload;
+        state.loading = false;
       })
       .addCase(postProduct.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
+        state.errorMessage = "";
       })
       .addCase(postProduct.fulfilled, (state, action) => {
         state.products.push(action.payload);
-        state.status = "succeeded";
+        state.loading = false;
         state.changeFlag = !state.changeFlag;
       })
       .addCase(postProduct.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.loading = false;
+        state.error = !state.error;
+        state.errorMessage = action.payload;
       })
       .addCase(updateProduct.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
+        state.errorMessage = "";
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         const index = state.products.findIndex(
@@ -100,22 +100,25 @@ const productsSlice = createSlice({
         if (index !== -1) {
           state.products[index] = action.payload;
         }
-        state.status = "succeeded";
+        state.loading = false;
         state.changeFlag = !state.changeFlag;
       })
       .addCase(updateProduct.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.loading = false;
+        state.error = !state.error;
+        state.errorMessage = action.payload;
       })
       .addCase(deleteProduct.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
+        state.errorMessage = "";
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.loading = false;
       })
       .addCase(deleteProduct.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.loading = false;
+        state.error = !state.error;
+        state.errorMessage = action.payload;
       });
   },
 });

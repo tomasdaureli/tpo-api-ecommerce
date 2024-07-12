@@ -8,10 +8,11 @@ import Paginator from "../utils/Paginator/Paginator";
 import { getCoupons } from "../../Features/Coupons/CuponsAction";
 import CouponCard from "../Cards/cuponCard";
 import CreateCouponModal from "../modals/CouponModal/CreateCouponModal ";
+import Alert from "../utils/SweetAlerts2/Alert";
 
 export function UserPnSList() {
   const dispatch = useDispatch();
-  const { coupons, couponsStatus, couponsError, changeCouponsSliceFlag } =
+  const { coupons, couponsError, couponsErrorMessage, changeCouponsSliceFlag } =
     useSelector((state) => state.coupons);
   const { user, status, buys } = useSelector((state) => state.user);
 
@@ -45,6 +46,12 @@ export function UserPnSList() {
       setProductsToShow(buys);
     }
   }, [status, user?.id, user?.role, , changeCouponsSliceFlag, dispatch]);
+
+  useEffect(() => {
+    if (couponsErrorMessage) {
+      Alert("error", couponsErrorMessage);
+    }
+  }, [couponsError, dispatch]);
 
   const openCreateModal = () => setShowCreateModal(true);
 

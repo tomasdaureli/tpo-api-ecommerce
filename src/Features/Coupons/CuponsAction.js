@@ -39,10 +39,11 @@ export const postCupons = createAsyncThunk(
         },
         body: JSON.stringify(cupon),
       });
+      const data = await response.json();
       if (!response.ok) {
-        throw new Error("Error en tu petición");
+        throw new Error(data.message);
       }
-      return await response.json();
+      return data;
     } catch (error) {
       console.error("Error:", error);
       return rejectWithValue(error.message);
