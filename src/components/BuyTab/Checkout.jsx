@@ -5,11 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserByJWT, postUserPurchase } from "../../Features/User/UserAction";
 import Alert from "../utils/SweetAlerts2/Alert";
 import defaultImage from "../../assets/imgs/noProductImage.png";
+import { getCouponByCoide } from "../../Features/Coupons/CuponsAction";
 
 export function Checkout({}) {
   const dispatch = useDispatch();
-  const { user, status, error } = useSelector((state) => state.user);
-  const [discountCode, setDiscountCode] = useState(false);
+  const { user } = useSelector((state) => state.user);
+  const { cupon } = useSelector((state) => state.coupons);
+  const [discountCode, setDiscountCode] = useState("");
+  const [totalChanged, setTotalChanged] = useState(null);
+  const [isDiscountCodeValid, setIsDiscountCodeValid] = useState(false);
   const [cart, setCart] = useState({
     products: [],
     countProducts: 0,
@@ -21,7 +25,6 @@ export function Checkout({}) {
     dispatch(getUserByJWT());
     const cart = JSON.parse(localStorage.getItem("CART"));
     if (cart) {
-      console.log(cart);
       setCart(cart);
     }
   }, []);
@@ -61,9 +64,33 @@ export function Checkout({}) {
         console.error("Checkout failed:", error);
       });
   };
+
   const handleChangeDiscountCode = (event) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     setDiscountCode(value);
+    setIsDiscountCodeValid(false);
+    setTotalChanged(null); // Reset the totalChanged when code is changed
+  };
+
+  const isPurchaseButtonEnabled = () => {
+    return !discountCode || isDiscountCodeValid;
+  };
+
+  const checkCode = () => {
+    dispatch(getCouponByCoide(discountCode))
+      .unwrap()
+      .then((result) => {
+        if (result) {
+          setIsDiscountCodeValid(true);
+          const discountAmount = (result.percentage * cart.total) / 100;
+          setTotalChanged(cart.total - discountAmount);
+        } else {
+          setIsDiscountCodeValid(false);
+        }
+      })
+      .catch(() => {
+        setIsDiscountCodeValid(false);
+      });
   };
 
   return (
@@ -100,13 +127,28 @@ export function Checkout({}) {
           </ul>
           <div className="discount-code">
             <label>Código de descuento:</label>
-            <input type="text" onChange={handleChangeDiscountCode} />
+            <div className="discount-code-inputs">
+              <input
+                type="text"
+                value={discountCode}
+                onChange={handleChangeDiscountCode}
+              />
+              <button type="button" onClick={checkCode}>
+                Confirmar codigo
+              </button>
+            </div>
           </div>
           <div className="checkout-total">
-            <p>Total de la compra: ${cart.total}</p>
+            <p>
+              Total de la compra: $
+              {Math.round(totalChanged !== null ? totalChanged : cart.total)}
+            </p>
             <button
-              className="confirm-button"
+              className={`confirm-button ${
+                isPurchaseButtonEnabled() ? "" : "blocked"
+              }`}
               onClick={() => handlePurchase(cart.products)}
+              disabled={!isPurchaseButtonEnabled()}
             >
               Reservar compra
             </button>

@@ -244,12 +244,17 @@ export function ProductInspection({ addedProduct, setAddedProduct }) {
               <p>{product.subcategory}</p>
             </div>
           </div>
-          <div className="danger-zone">
-            <h2>Zona de peligro</h2>
-            <button className="danger-button" onClick={() => handleOpenModal()}>
-              Eliminar producto
-            </button>
-          </div>
+          {user?.role === "VENDEDOR" && (
+            <div className="danger-zone">
+              <h2>Zona de peligro</h2>
+              <button
+                className="danger-button"
+                onClick={() => handleOpenModal()}
+              >
+                Eliminar producto
+              </button>
+            </div>
+          )}
         </div>
       )}
 

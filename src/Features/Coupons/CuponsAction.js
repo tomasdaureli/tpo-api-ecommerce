@@ -26,6 +26,32 @@ export const getCoupons = createAsyncThunk(
   }
 );
 
+export const getCouponByCoide = createAsyncThunk(
+  "coupons/getCouponByCode",
+  async (discountCode, { rejectWithValue }) => {
+    const token = localStorage.getItem("access_token");
+    try {
+      const response = await fetch(
+        `${BASE_URL}/discounts/code/${discountCode}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message);
+      }
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const postCupons = createAsyncThunk(
   "coupons/postCupons",
   async (cupon, { rejectWithValue }) => {

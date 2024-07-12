@@ -22,7 +22,14 @@ const EditCouponModal = ({ coupon, setShowModal }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
-      patchCupon({ discount: { code, percentage, expiryDate }, id: coupon.id })
+      patchCupon({
+        discount: {
+          code: coupon.code == code ? null : code,
+          percentage,
+          expiryDate,
+        },
+        id: coupon.id,
+      })
     );
   };
 
