@@ -7,14 +7,14 @@ import Alert from "../utils/SweetAlerts2/Alert";
 
 export function ProductBuyerCard({ product }) {
   const dispatch = useDispatch();
-  const [productStatus, setProductStatus] = useState("");
+  const [productStatus, setProductStatus] = useState(product.status);
   const { status, error, errorMessage } = useSelector(
     (state) => state.products
   );
 
   useEffect(() => {
     setProductStatus(product.status);
-  }, []);
+  }, [product.number]);
 
   useEffect(() => {
     if (errorMessage) {

@@ -109,7 +109,7 @@ export const Header = ({ addedProduct, setAddedProduct }) => {
 
               <div className="cart-total">
                 <h3>Total:</h3>
-                <span className="total-pagar">${cart.total}</span>
+                <span className="total-pagar">${Math.round(cart.total)}</span>
               </div>
 
               <button className="btn-finish-buy" onClick={onFinishBuy}>

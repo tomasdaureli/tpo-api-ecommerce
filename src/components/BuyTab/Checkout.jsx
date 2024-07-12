@@ -10,7 +10,9 @@ import { getCouponByCoide } from "../../Features/Coupons/CuponsAction";
 export function Checkout({}) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { cupon } = useSelector((state) => state.coupons);
+  const { couponsErrorMessage, couponsError } = useSelector(
+    (state) => state.coupons
+  );
   const [discountCode, setDiscountCode] = useState("");
   const [totalChanged, setTotalChanged] = useState(null);
   const [isDiscountCodeValid, setIsDiscountCodeValid] = useState(false);
@@ -28,6 +30,12 @@ export function Checkout({}) {
       setCart(cart);
     }
   }, []);
+
+  useEffect(() => {
+    if (couponsErrorMessage) {
+      Alert("error", couponsErrorMessage);
+    }
+  }, [couponsError]);
 
   const handlePurchase = async (purchase) => {
     const productsToSend = purchase.map((product) => ({
@@ -84,6 +92,13 @@ export function Checkout({}) {
           setIsDiscountCodeValid(true);
           const discountAmount = (result.percentage * cart.total) / 100;
           setTotalChanged(cart.total - discountAmount);
+          Alert(
+            "success",
+            "Este cupon es valido y tiene un descuento del " +
+              result.percentage +
+              "%",
+            "center"
+          );
         } else {
           setIsDiscountCodeValid(false);
         }
