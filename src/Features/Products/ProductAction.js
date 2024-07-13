@@ -18,8 +18,9 @@ export const getProducts = createAsyncThunk(
     if (sortPriceAsc)
       params.append("sortPriceAsc", sortPriceAsc == "asc" ? true : false);
     url += `?${params.toString()}`;
+
     try {
-      const response = await fetch(`${BASE_URL}/products`, {
+      const response = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

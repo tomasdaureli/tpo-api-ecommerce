@@ -156,6 +156,12 @@ export const ProductList = ({ addedProduct, setAddedProduct }) => {
         });
     }
     if (user?.role == "COMPRADOR") {
+      console.log({
+        nombre: e.name,
+        category: e.category,
+        subcategory: e.subcategory,
+        sortPriceAsc: e.sortPrice,
+      });
       dispatch(
         getProducts({
           nombre: e.name,
